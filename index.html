@@ -177,6 +177,36 @@
         </div>
       </div>
     </div>
+  <!-- TAMBAHAN FITUR 2: HIGH-FREQUENCY MICROSTRUCTURE & ALPHA-GENERATING -->
+    <div style="margin-top: 24px; padding: 20px; background: #f8fafc; border: 1px solid #94a3b8; border-radius: 8px;">
+      <h3 style="margin-top: 0; color: #0f172a;">Analisis Data Mikrostruktur Berfrekuensi Tinggi &amp; Alpha-Generating Strategies</h3>
+      <p style="font-size: 14px; color: #475569;">Simulasi sinyal kontraksi <i>m. gastrocnemius</i> beresolusi tinggi (per 100 ms), kurva kelelahan <i>(fatigue slope)</i>, kinetika VO2, dan deteksi dini <b>Hypertrophy Alpha Index</b>.</p>
+      
+      <div class="grid">
+        <div style="background: white; padding: 14px; border-radius: 6px; border: 1px solid #e2e8f0;">
+          <h4>A. Sinyal Kontraksi Gastrocnemius &amp; Fatigue Slope (ms)</h4>
+          <canvas id="microChart"></canvas>
+        </div>
+        <div style="background: white; padding: 14px; border-radius: 6px; border: 1px solid #e2e8f0;">
+          <h4>B. Peringkat Hypertrophy Alpha Index (Deteksi Dini)</h4>
+          <table>
+            <thead>
+              <tr><th>ID Subjek</th><th>Kelompok</th><th>Alpha Index</th><th>Status Sinyal Alpha</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><b>Wistar_06</b></td><td>Resistance</td><td><b>94.0</b></td><td style="color:#166534; font-weight:bold;">STRONG ALPHA (Optimal)</td></tr>
+              <tr><td><b>Wistar_05</b></td><td>Resistance</td><td><b>94.0</b></td><td style="color:#166534; font-weight:bold;">STRONG ALPHA (Optimal)</td></tr>
+              <tr><td><b>Wistar_08</b></td><td>Resistance</td><td><b>94.0</b></td><td style="color:#166534; font-weight:bold;">STRONG ALPHA (Optimal)</td></tr>
+              <tr><td><b>Wistar_07</b></td><td>Resistance</td><td><b>69.0</b></td><td style="color:#1d4ed8; font-weight:bold;">MODERATE ALPHA</td></tr>
+              <tr><td><b>Wistar_04</b></td><td>Kontrol</td><td>50.0</td><td>BASELINE</td></tr>
+              <tr><td><b>Wistar_01</b></td><td>Kontrol</td><td>44.0</td><td>BASELINE</td></tr>
+              <tr><td><b>Wistar_02</b></td><td>Kontrol</td><td>44.0</td><td>BASELINE</td></tr>
+              <tr><td><b>Wistar_03</b></td><td>Kontrol</td><td>25.0</td><td>BASELINE (Low)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   <script>
     const dataWistar = [
       { id: 'Wistar_01', group: 'Kontrol', mtor: 28.4, elisa: 'Rendah', strength: 'Normal', vo2: 'Cukup' },
@@ -241,6 +271,29 @@
       document.getElementById('hasilNodeSPSS').innerText = `${node}: Prediksi Histologi mTOR = ${hasil}%`;
       document.getElementById('jalurNodeSPSS').innerText = `Jalur Algoritma SPSS CRT: ${jalur}`;
     }
+    // Grafik Mikrostruktur High-Frequency (ms)
+    const msLabels = ['0ms', '500ms', '1000ms', '1500ms', '2000ms', '2500ms', '3000ms', '3500ms', '4000ms', '4500ms'];
+    new Chart(document.getElementById('microChart'), {
+      type: 'line',
+      data: {
+        labels: msLabels,
+        datasets: [
+          {
+            label: 'Kontraksi Resistance (g) - Fatigue Slope Landai',
+            data: [145, 139, 134, 129, 125, 121, 118, 115, 112, 110],
+            borderColor: '#2563eb',
+            tension: 0.3
+          },
+          {
+            label: 'Kontraksi Kontrol (g) - Fatigue Slope Curam',
+            data: [100, 88, 78, 69, 61, 54, 48, 43, 38, 34],
+            borderColor: '#94a3b8',
+            tension: 0.3
+          }
+        ]
+      },
+      options: { responsive: true }
+    });
   </script>
 </body>
 </html>
