@@ -140,3 +140,54 @@ input_df = pd.DataFrame([[skala[in_elisa], skala[in_kuat], skala[in_vo2]]],
 hasil_prediksi = model.predict(input_df)[0]
 
 st.success(f"**Hasil Prediksi Model AI:** Perkiraan Ekspresi Kuantitatif Histologi mTOR adalah **{hasil_prediksi:.2f}%**")
+
+
+# ==============================================================================
+# TAMBAHAN: ALGORITMA AUTO-SPSS & FEATURE IMPORTANCE MACHINE LEARNING
+# ==============================================================================
+from sklearn.tree import DecisionTreeRegressor, export_text
+
+st.divider()
+st.header("Algoritma Auto-SPSS & Analisis Pengaruh Faktor (Feature Importance)")
+
+col_alg1, col_alg2 = st.columns(2)
+
+# 1. Algoritma Pemilihan Uji SPSS Otomatis
+with col_alg1:
+    st.subheader("1. Algoritma Keputusan Uji Statistik (Auto-SPSS)")
+    ctrl_data = df[df["kelompok"] == "Kontrol"]["histologi_mtor_persen"]
+    res_data = df[df["kelompok"] == "Resistance"]["histologi_mtor_persen"]
+
+    _, p_norm_ctrl = stats.shapiro(ctrl_data)
+    _, p_norm_res = stats.shapiro(res_data)
+
+    if p_norm_ctrl > 0.05 and p_norm_res > 0.05:
+        metode_terpilih = "Independent Samples T-Test (Parametrik)"
+        stat_val, p_final = stats.ttest_ind(res_data, ctrl_data)
+        alasan = f"Kedua kelompok berdistribusi normal (Shapiro-Wilk p = {p_norm_ctrl:.3f} & {p_norm_res:.3f} > 0.05)."
+    else:
+        metode_terpilih = "Mann-Whitney U Test (Non-Parametrik)"
+        stat_val, p_final = stats.mannwhitneyu(res_data, ctrl_data)
+        alasan = "Salah satu kelompok tidak berdistribusi normal (p <= 0.05)."
+
+    st.success(f"**Uji Terpilih Otomatis:** {metode_terpilih}")
+    st.write(f"**Alasan Algoritma:** {alasan}")
+    st.write(f"**Hasil Akhir:** Statistik = `{stat_val:.4f}` | **p-value = `{p_final:.6f}`**")
+
+# 2. Algoritma Machine Learning: Bobot Pengaruh Variabel Kualitatif
+with col_alg2:
+    st.subheader("2. Algoritma Pengaruh Faktor Kualitatif (ML Weights)")
+    skala_ml = {'Rendah': 1, 'Lemah': 1, 'Kurang': 1, 'Sedang': 2, 'Normal': 2, 'Cukup': 2, 'Tinggi': 3, 'Kuat': 3, 'Baik': 3, 'Sangat Kuat': 4, 'Sangat Baik': 4}
+    X_ml = df[['mtor_elisa_kualitatif', 'kekuatan_otot_kualitatif', 'endurance_vo2max_kualitatif']].replace(skala_ml)
+    y_ml = df['histologi_mtor_persen']
+
+    rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+    rf_model.fit(X_ml, y_ml)
+
+    bobot_df = pd.DataFrame({
+        "Variabel Kualitatif": ["mTOR ELISA", "Kekuatan Otot", "Endurance & VO2 Max"],
+        "Kontribusi Pengaruh (%)": (rf_model.feature_importances_ * 100).round(1)
+    }).set_index("Variabel Kualitatif")
+
+    st.bar_chart(bobot_df)
+    st.caption("Grafik menunjukkan seberapa besar pengaruh tiap indikator kualitatif dalam memprediksi skor histologi mTOR.")
