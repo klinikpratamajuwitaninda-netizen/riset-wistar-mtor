@@ -86,8 +86,36 @@
       <div class="result" id="hasilML">Prediksi Skor Kuantitatif Histologi mTOR: 77.30%</div>
     </div>
   </div>
-
-  <script>
+<!-- TAMBAHAN BARU: PEMODELAN STATISTIK GAYA SPSS -->
+    <div style="margin-top: 24px; padding: 20px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px;">
+      <h3 style="margin-top: 0; color: #1e3a8a;">Pemodelan Statistik Gaya SPSS (Statistical Modelling)</h3>
+      <div class="grid">
+        <div>
+          <h4>A. Uji Kuantitatif (Histologi mTOR Gastrocnemius)</h4>
+          <table>
+            <thead><tr><th>Parameter Uji</th><th>Hasil Kalkulasi</th></tr></thead>
+            <tbody>
+              <tr><td>Mean ± SD (Kontrol)</td><td>29.03% ± 1.96</td></tr>
+              <tr><td>Mean ± SD (Resistance)</td><td>75.78% ± 3.60</td></tr>
+              <tr><td>Uji Normalitas (Shapiro-Wilk)</td><td>p = 0.782 (Distribusi Normal)</td></tr>
+              <tr><td><b>Independent T-Test</b></td><td><b>t = 22.81, p = 0.00001 (Signifikan)</b></td></tr>
+              <tr><td><b>Mann-Whitney U Test</b></td><td><b>U = 16.0, p = 0.02857 (Signifikan)</b></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h4>B. Uji Kualitatif (Crosstabs & Chi-Square Non-Histologi)</h4>
+          <table>
+            <thead><tr><th>Variabel Kualitatif</th><th>Distribusi (Kontrol vs Resistance)</th><th>Uji Chi-Square / Fisher</th></tr></thead>
+            <tbody>
+              <tr><td>mTOR ELISA</td><td>3 Rendah, 1 Sedang vs 3 Tinggi, 1 Sedang</td><td>p = 0.0498 (Signifikan)</td></tr>
+              <tr><td>Kekuatan Otot</td><td>3 Normal, 1 Lemah vs 3 Sangat Kuat, 1 Kuat</td><td>p = 0.0183 (Signifikan)</td></tr>
+              <tr><td>Endurance & VO2 Max</td><td>3 Cukup, 1 Kurang vs 3 Sangat Baik, 1 Baik</td><td>p = 0.0183 (Signifikan)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>  <script>
     const dataWistar = [
       { id: 'Wistar_01', group: 'Kontrol', mtor: 28.4, elisa: 'Rendah', strength: 'Normal', vo2: 'Cukup' },
       { id: 'Wistar_02', group: 'Kontrol', mtor: 31.0, elisa: 'Rendah', strength: 'Normal', vo2: 'Cukup' },
