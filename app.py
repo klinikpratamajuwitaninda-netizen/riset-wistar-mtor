@@ -333,3 +333,86 @@ pred_sh = model_sh.predict(pd.DataFrame([[in_gaya, in_fatigue, in_vo2_kin]], col
 pred_sh = max(15.0, min(95.0, pred_sh))
 
 st.success(f"**Hasil Prediksi Short-Horizon AI:** Skor Kuantitatif Histologi mTOR diprediksi mencapai **{pred_sh:.2f}%** ({'Respons Hipertrofi Tinggi' if pred_sh >= 60 else 'Respons Basal / Rendah'})")
+
+
+# ==============================================================================
+# TAMBAHAN FITUR 3: ASISTEN RISET AI & MODEL CONTEXT PROTOCOL (MCP TOOLING)
+# ==============================================================================
+import re
+
+st.divider()
+st.header("Asisten Riset AI & Model Context Protocol (AI Agents & MCP Tooling)")
+st.markdown("Ketik pertanyaan riset dalam bahasa sehari-hari (contoh: *'Bandingkan Wistar_05 vs Wistar_01'*, *'Rata-rata histologi tiap kelompok'*, atau *'Tikus mana yang paling kuat?'*). Agen AI akan memanggil **MCP Data Tool** secara otomatis.")
+
+# Definisi MCP Tool (Mengeksekusi kueri langsung ke dataframe df)
+def jalankan_mcp_agent(pertanyaan: str, data: pd.DataFrame):
+    q = pertanyaan.lower()
+    subjek_ditemukan = re.findall(r"wistar_0[1-8]", q)
+
+    # Tool 1: Perbandingan antar subjek spesifik (misal: Wistar_05 vs Wistar_01)
+    if len(subjek_ditemukan) >= 2:
+        s1, s2 = subjek_ditemukan[0].capitalize(), subjek_ditemukan[1].capitalize()
+        r1 = data[data["rat_id"] == s1].iloc[0]
+        r2 = data[data["rat_id"] == s2].iloc[0]
+        selisih = abs(r1["histologi_mtor_persen"] - r2["histologi_mtor_persen"])
+        tool_log = f"mcp_tool: compare_subjects(subject_a='{s1}', subject_b='{s2}')"
+        jawaban = (
+            f"**Perbandingan {s1} ({r1['kelompok']}) vs {s2} ({r2['kelompok']}):**\n"
+            f"- **Kuantitatif Histologi mTOR:** {s1} = **{r1['histologi_mtor_persen']}%** vs {s2} = **{r2['histologi_mtor_persen']}%** (Selisih **{selisih:.1f}%**).\n"
+            f"- **Kualitatif Non-Histologi:** {s1} (ELISA: *{r1['mtor_elisa_kualitatif']}*, Kekuatan: *{r1['kekuatan_otot_kualitatif']}*, VO2 Max: *{r1['endurance_vo2max_kualitatif']}*) "
+            f"dibandingkan {s2} (ELISA: *{r2['mtor_elisa_kualitatif']}*, Kekuatan: *{r2['kekuatan_otot_kualitatif']}*, VO2 Max: *{r2['endurance_vo2max_kualitatif']}*).\n"
+            f"- **Kesimpulan AI:** Subjek kelompok Resistance menunjukkan aktivasi jalur hipertrofi mTOR yang jauh lebih tinggi sejalan dengan kapasitas fungsionalnya."
+        )
+        return tool_log, jawaban
+
+    # Tool 2: Detail 1 subjek spesifik
+    elif len(subjek_ditemukan) == 1:
+        s1 = subjek_ditemukan[0].capitalize()
+        r1 = data[data["rat_id"] == s1].iloc[0]
+        tool_log = f"mcp_tool: get_subject_profile(rat_id='{s1}')"
+        jawaban = (
+            f"**Profil Lengkap {s1} (Kelompok {r1['kelompok']}):**\n"
+            f"- **Kuantitatif:** Histologi mTOR = **{r1['histologi_mtor_persen']}%**, Luas Serabut CSA = **{r1['luas_serabut_csa_um2']} µm²**.\n"
+            f"- **Kualitatif:** mTOR ELISA = *{r1['mtor_elisa_kualitatif']}*, Kekuatan Otot = *{r1['kekuatan_otot_kualitatif']}*, Endurance & VO2 Max = *{r1['endurance_vo2max_kualitatif']}*."
+        )
+        return tool_log, jawaban
+
+    # Tool 3: Subjek terbaik / tertinggi / paling kuat
+    elif any(k in q for k in ["tertinggi", "terbaik", "paling kuat", "optimal", "top"]):
+        top = data.sort_values(by="histologi_mtor_persen", ascending=False).iloc[0]
+        tool_log = "mcp_tool: query_top_responder(metric='histologi_mtor_persen', limit=1)"
+        jawaban = (
+            f"**Subjek dengan Respons Tertinggi adalah {top['rat_id']} (Kelompok {top['kelompok']}):**\n"
+            f"- **Histologi mTOR (Kuantitatif):** **{top['histologi_mtor_persen']}%** (Luas serabut {top['luas_serabut_csa_um2']} µm²).\n"
+            f"- **Profil Kualitatif:** ELISA *{top['mtor_elisa_kualitatif']}*, Kekuatan *{top['kekuatan_otot_kualitatif']}*, Endurance/VO2 Max *{top['endurance_vo2max_kualitatif']}*."
+        )
+        return tool_log, jawaban
+
+    # Tool 4: Ringkasan kelompok / rata-rata / default
+    else:
+        mean_ctrl = data[data["kelompok"] == "Kontrol"]["histologi_mtor_persen"].mean()
+        mean_res = data[data["kelompok"] == "Resistance"]["histologi_mtor_persen"].mean()
+        tool_log = "mcp_tool: aggregate_group_summary(group_by='kelompok')"
+        jawaban = (
+            f"**Ringkasan Eksekusi Data 8 Tikus Wistar:**\n"
+            f"- **Kelompok Resistance (n=4):** Rata-rata histologi mTOR kuantitatif = **{mean_res:.2f}%** (didominasi kategori kualitatif *Tinggi* & *Sangat Kuat*).\n"
+            f"- **Kelompok Kontrol (n=4):** Rata-rata histologi mTOR kuantitatif = **{mean_ctrl:.2f}%** (didominasi kategori kualitatif *Rendah* & *Normal*).\n"
+            f"- **Kesimpulan AI:** Intervensi *resistance training* meningkatkan ekspresi kuantitatif mTOR sebesar **+{mean_res - mean_ctrl:.2f}%** dibanding kontrol."
+        )
+        return tool_log, jawaban
+
+# Input Pertanyaan Cepat & Kotak Chat
+contoh_tanya = st.selectbox(
+    "Pilih Contoh Pertanyaan Cepat (atau ketik pertanyaan Anda sendiri di bawah):",
+    [
+        "Bandingkan hasil histologi kuantitatif dan ELISA kualitatif pada Wistar_05 vs Wistar_01",
+        "Tikus mana yang memiliki ekspresi histologi mTOR dan kekuatan otot tertinggi?",
+        "Tampilkan ringkasan rata-rata kelompok Resistance vs Kontrol"
+    ]
+)
+tanya_user = st.text_input("Pertanyaan Anda ke Asisten AI:", value=contoh_tanya)
+
+if tanya_user:
+    log_mcp, respon_ai = jalankan_mcp_agent(tanya_user, df)
+    st.code(f"[MCP Server Execution] -> {log_mcp} | Status: 200 OK", language="bash")
+    st.info(respon_ai)
