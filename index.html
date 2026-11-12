@@ -252,6 +252,52 @@
         &bull; <b>Kesimpulan:</b> Resistance training memicu aktivasi jalur mTOR kuantitatif dan peningkatan performa fungsional secara bersamaan.
       </div>
     </div>
+  <!-- TAMBAHAN FITUR 4: SIMULASI KUERI DATA CLOUD (SNOWFLAKE / DATABRICKS) -->
+    <div style="margin-top: 24px; padding: 20px; background: #f0f9ff; border: 1px solid #7dd3fc; border-radius: 8px;">
+      <h3 style="margin-top: 0; color: #0369a1;">Simulasi Kueri Data Cloud (Snowflake / Databricks &amp; Query Optimization)</h3>
+      <p style="font-size: 14px; color: #334155;">Panel <b>SQL Query Explorer &amp; Performance Benchmark</b> dengan perbandingan kecepatan sebelum dan sesudah optimasi (<i>clustering &amp; caching</i>) serta skema tabel <i>Data Warehouse</i>[cite: 16].</p>
+      
+      <div class="grid">
+        <div style="background: white; padding: 14px; border-radius: 6px; border: 1px solid #bae6fd;">
+          <h4 style="margin-top: 0;">A. Skema Data Warehouse (Snowflake / Databricks)</h4>
+          <table>
+            <thead>
+              <tr><th>Kolom Tabel</th><th>Tipe Data</th><th>Optimasi Warehouse</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><b>rat_id</b></td><td>VARCHAR(16)</td><td>Primary Key</td></tr>
+              <tr><td><b>kelompok</b></td><td>VARCHAR(32)</td><td><b>Cluster Key (Partition)</b></td></tr>
+              <tr><td><b>histologi_mtor_persen</b></td><td>FLOAT</td><td>Kuantitatif (Histologi)</td></tr>
+              <tr><td><b>mtor_elisa_kualitatif</b></td><td>VARCHAR(24)</td><td>Kualitatif (Non-Histologi)</td></tr>
+              <tr><td><b>kekuatan_otot_kualitatif</b></td><td>VARCHAR(24)</td><td>Kualitatif (Non-Histologi)</td></tr>
+              <tr><td><b>endurance_vo2max_kualitatif</b></td><td>VARCHAR(24)</td><td>Kualitatif (Non-Histologi)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="background: white; padding: 14px; border-radius: 6px; border: 1px solid #bae6fd;">
+          <h4 style="margin-top: 0;">B. SQL Query Explorer &amp; Performance Benchmark</h4>
+          <select id="sqlModeSelect" onchange="jalankanSQLCloudflare()" style="margin-bottom: 10px;">
+            <option value="opt">Mode Optimized: Clustering Key + Result Cache (Snowflake/Databricks)</option>
+            <option value="unopt">Mode Unoptimized: Full Table Scan (Tanpa Clustering/Cache)</option>
+          </select>
+          <pre style="background: #0f172a; color: #38bdf8; padding: 10px; border-radius: 6px; font-size: 12px; overflow-x: auto; margin: 0 0 10px 0;">SELECT kelompok, COUNT(*) AS n,
+       ROUND(AVG(histologi_mtor_persen), 2) AS avg_mtor
+FROM FACT_WISTAR_EXPERIMENT
+GROUP BY kelompok;</pre>
+          <div id="sqlBenchResult" style="background: #ecfdf5; border: 1px solid #6ee7b7; padding: 10px; border-radius: 6px; font-size: 13px; color: #065f46; font-weight: bold;">
+            Waktu Eksekusi: 6.40 ms (95.5% Lebih Cepat) | Partition Pruning: 87.5% | Cache: HIT
+          </div>
+          <table style="margin-top: 10px;">
+            <thead><tr><th>kelompok</th><th>n</th><th>avg_mtor (Kuantitatif)</th></tr></thead>
+            <tbody>
+              <tr><td>Kontrol</td><td>4</td><td>29.03%</td></tr>
+              <tr><td>Resistance</td><td>4</td><td>75.78%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   <script>
     const dataWistar = [
       { id: 'Wistar_01', group: 'Kontrol', mtor: 28.4, elisa: 'Rendah', strength: 'Normal', vo2: 'Cukup' },
@@ -391,6 +437,21 @@
       }
       document.getElementById('mcpToolLog').innerText = log;
       document.getElementById('mcpResponseBox').innerHTML = hasil;
+    }
+    function jalankanSQLCloudflare() {
+      const mode = document.getElementById('sqlModeSelect').value;
+      const box = document.getElementById('sqlBenchResult');
+      if (mode === 'opt') {
+        box.style.background = '#ecfdf5';
+        box.style.borderColor = '#6ee7b7';
+        box.style.color = '#065f46';
+        box.innerText = 'Waktu Eksekusi: 6.40 ms (95.5% Lebih Cepat) | Partition Pruning: 87.5% | Cache: HIT';
+      } else {
+        box.style.background = '#fef2f2';
+        box.style.borderColor = '#fca5a5';
+        box.style.color = '#991b1b';
+        box.innerText = 'Waktu Eksekusi: 144.80 ms (Lambat - Full Table Scan) | Partition Pruning: 0% | Cache: MISS';
+      }
     }
   </script>
 </body>
