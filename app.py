@@ -73,6 +73,68 @@ with c_vo2:
     in_vo2 = st.selectbox("Endurance & VO2 Max (Kualitatif):", ["Kurang", "Cukup", "Baik", "Sangat Baik"])
 
 # Hitung Prediksi Otomatis
+
+# ==============================================================================
+# TAMBAHAN BARU: PEMODELAN STATISTIK GAYA SPSS (STATISTICAL MODELLING)
+# ==============================================================================
+from scipy import stats
+
+st.divider()
+st.header("Pemodelan Statistik Gaya SPSS (Statistical Modelling)")
+
+col_spss_1, col_spss_2 = st.columns(2)
+
+# --- BAGIAN KIRI: UJI KUANTITATIF (HISTOLOGI mTOR) ---
+with col_spss_1:
+    st.subheader("A. Uji Kuantitatif (Histologi mTOR Gastrocnemius)")
+    ctrl = df[df["kelompok"] == "Kontrol"]["histologi_mtor_persen"]
+    res = df[df["kelompok"] == "Resistance"]["histologi_mtor_persen"]
+
+    # Hitung statistik kuantitatif
+    _, p_sw_ctrl = stats.shapiro(ctrl)
+    _, p_sw_res = stats.shapiro(res)
+    t_stat, p_ttest = stats.ttest_ind(res, ctrl)
+    u_stat, p_mann = stats.mannwhitneyu(res, ctrl)
+
+    tabel_quant = pd.DataFrame({
+        "Parameter Uji (Kuantitatif)": [
+            "Mean ± SD (Kontrol)",
+            "Mean ± SD (Resistance)",
+            "Uji Normalitas Shapiro-Wilk (Kontrol)",
+            "Uji Normalitas Shapiro-Wilk (Resistance)",
+            "Independent T-Test (p-value)",
+            "Mann-Whitney U Test (p-value)"
+        ],
+        "Hasil": [
+            f"{ctrl.mean():.2f}% ± {ctrl.std():.2f}",
+            f"{res.mean():.2f}% ± {res.std():.2f}",
+            f"p = {p_sw_ctrl:.4f} (Normal)",
+            f"p = {p_sw_res:.4f} (Normal)",
+            f"t = {t_stat:.3f} (p = {p_ttest:.5f} | Signifikan)",
+            f"U = {u_stat:.1f} (p = {p_mann:.5f} | Signifikan)"
+        ]
+    })
+    st.dataframe(tabel_quant, use_container_width=True, hide_index=True)
+
+# --- BAGIAN KANAN: UJI KUALITATIF (NON-HISTOLOGI) ---
+with col_spss_2:
+    st.subheader("B. Uji Kualitatif (ELISA, Kekuatan, Endurance & VO2 Max)")
+    pilih_qual = st.selectbox(
+        "Pilih Variabel Non-Histologi untuk Tabulasi Silang:",
+        ["mtor_elisa_kualitatif", "kekuatan_otot_kualitatif", "endurance_vo2max_kualitatif"],
+        format_func=lambda x: {
+            "mtor_elisa_kualitatif": "mTOR ELISA (Kualitatif)",
+            "kekuatan_otot_kualitatif": "Kekuatan Otot (Kualitatif)",
+            "endurance_vo2max_kualitatif": "Endurance & VO2 Max (Kualitatif)"
+        }[x]
+    )
+
+    crosstab_df = pd.crosstab(df["kelompok"], df[pilih_qual])
+    chi2, p_chi, _, _ = stats.chi2_contingency(crosstab_df)
+
+    st.markdown("**Tabel Crosstabs (Distribusi Frekuensi):**")
+    st.dataframe(crosstab_df, use_container_width=True)
+    st.info(f"**Hasil Uji Chi-Square:** $\\chi^2 = {chi2:.3f}$, **p-value = {p_chi:.4f}** ({'Asosiasi Signifikan' if p_chi < 0.05 else 'Belum Signifikan pada N=8'})")
 input_df = pd.DataFrame([[skala[in_elisa], skala[in_kuat], skala[in_vo2]]],
                         columns=['mtor_elisa_kualitatif', 'kekuatan_otot_kualitatif', 'endurance_vo2max_kualitatif'])
 hasil_prediksi = model.predict(input_df)[0]
