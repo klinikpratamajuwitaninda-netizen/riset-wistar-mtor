@@ -135,7 +135,49 @@
           </ul>
         </div>
       </div>
-    </div>  <script>
+    </div> 
+  <!-- TAMBAHAN: SIMULASI PREDIKSI MACHINE LEARNING GAYA SPSS (CRT TREE) -->
+    <div style="margin-top: 24px; padding: 20px; background: #fefce8; border: 1px solid #fde047; border-radius: 8px;">
+      <h3 style="margin-top: 0; color: #854d0e;">Simulasi Prediksi Algoritma Machine Learning Gaya SPSS (CRT Decision Tree)</h3>
+      <p style="font-size: 14px;">Geser atau pilih kategori kualitatif untuk melihat jalur keputusan <i>(Decision Node)</i> algoritma SPSS CRT dalam memprediksi skor kuantitatif histologi mTOR:</p>
+      <div class="ml-inputs">
+        <div>
+          <label><b>1. mTOR ELISA (Kualitatif):</b></label>
+          <select id="crtElisa" onchange="simulasiSPSS()">
+            <option value="1">1 - Rendah</option>
+            <option value="2">2 - Sedang</option>
+            <option value="3" selected>3 - Tinggi</option>
+          </select>
+        </div>
+        <div>
+          <label><b>2. Kekuatan Otot (Kualitatif):</b></label>
+          <select id="crtKuat" onchange="simulasiSPSS()">
+            <option value="1">1 - Lemah</option>
+            <option value="2">2 - Normal</option>
+            <option value="3">3 - Kuat</option>
+            <option value="4" selected>4 - Sangat Kuat</option>
+          </select>
+        </div>
+        <div>
+          <label><b>3. Endurance & VO2 Max (Kualitatif):</b></label>
+          <select id="crtVo2" onchange="simulasiSPSS()">
+            <option value="1">1 - Kurang</option>
+            <option value="2">2 - Cukup</option>
+            <option value="3">3 - Baik</option>
+            <option value="4" selected>4 - Sangat Baik</option>
+          </select>
+        </div>
+      </div>
+      <div style="background: white; padding: 14px; border-radius: 6px; border: 1px solid #fef08a; margin-top: 12px;">
+        <div id="hasilNodeSPSS" style="font-size: 17px; font-weight: bold; color: #166534;">
+          Node 4 (Resistance): Prediksi Histologi mTOR = 77.30%
+        </div>
+        <div id="jalurNodeSPSS" style="font-size: 13px; color: #475569; margin-top: 4px;">
+          Jalur Algoritma SPSS CRT: Kekuatan Otot &gt; 2.5 &rarr; mTOR ELISA &gt; 2.5 &rarr; Terminal Node 4
+        </div>
+      </div>
+    </div>
+  <script>
     const dataWistar = [
       { id: 'Wistar_01', group: 'Kontrol', mtor: 28.4, elisa: 'Rendah', strength: 'Normal', vo2: 'Cukup' },
       { id: 'Wistar_02', group: 'Kontrol', mtor: 31.0, elisa: 'Rendah', strength: 'Normal', vo2: 'Cukup' },
@@ -168,6 +210,36 @@
       // Regresi terkalibrasi dari 8 data eksperimen Wistar
       const prediksi = Math.min(95, Math.max(20, 12.5 + (e * 8.2) + (k * 5.1) + (v * 4.9)));
       document.getElementById('hasilML').innerText = `Prediksi Skor Kuantitatif Histologi mTOR: ${prediksi.toFixed(2)}%`;
+    }
+    function simulasiSPSS() {
+      const e = parseInt(document.getElementById('crtElisa').value);
+      const k = parseInt(document.getElementById('crtKuat').value);
+      const v = parseInt(document.getElementById('crtVo2').value);
+      let node = '', hasil = 0, jalur = '';
+
+      if (k <= 2) {
+        if (k === 1) {
+          node = 'Terminal Node 1 (Kontrol - Lemah)';
+          hasil = 26.50;
+          jalur = 'Kekuatan Otot <= 2.5 -> Kekuatan Otot <= 1.5 -> Node 1';
+        } else {
+          node = 'Terminal Node 2 (Kontrol - Normal)';
+          hasil = e === 2 ? 30.20 : 29.70;
+          jalur = 'Kekuatan Otot <= 2.5 -> Kekuatan Otot > 1.5 -> Node 2';
+        }
+      } else {
+        if (k === 3) {
+          node = 'Terminal Node 3 (Resistance - Kuat)';
+          hasil = 71.20;
+          jalur = 'Kekuatan Otot > 2.5 -> Kekuatan Otot <= 3.5 -> Node 3';
+        } else {
+          node = 'Terminal Node 4 (Resistance - Sangat Kuat)';
+          hasil = ((74.8 + 79.5 + 77.6) / 3).toFixed(2);
+          jalur = 'Kekuatan Otot > 2.5 -> Kekuatan Otot > 3.5 -> Node 4';
+        }
+      }
+      document.getElementById('hasilNodeSPSS').innerText = `${node}: Prediksi Histologi mTOR = ${hasil}%`;
+      document.getElementById('jalurNodeSPSS').innerText = `Jalur Algoritma SPSS CRT: ${jalur}`;
     }
   </script>
 </body>
