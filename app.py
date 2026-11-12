@@ -231,3 +231,68 @@ with col_sim2:
     aturan_pohon = export_text(spss_tree, feature_names=["mTOR_ELISA", "Kekuatan_Otot", "Endurance_VO2Max"])
     st.code(aturan_pohon, language="text")
     st.caption("Catatan: Skala 1 = Rendah/Lemah, 2 = Sedang/Normal, 3 = Tinggi/Kuat, 4 = Sangat Kuat/Baik.")
+
+
+# ==============================================================================
+# TAMBAHAN FITUR 2: HIGH-FREQUENCY MICROSTRUCTURE & ALPHA-GENERATING STRATEGIES
+# ==============================================================================
+import numpy as np
+
+st.divider()
+st.header("Analisis Data Mikrostruktur Berfrekuensi Tinggi & Alpha-Generating")
+st.markdown("Simulasi telemetri resolusi tinggi (per 100 ms) sinyal kontraksi *m. gastrocnemius*, kurva kelelahan (*fatigue slope*), dan kinetika $\\text{VO}_2$ untuk deteksi dini efisiensi hipertrofi (*Hypertrophy Alpha Index*).")
+
+# Simulasi Data Time-Series High-Frequency (0 - 5000 ms)
+waktu_ms = np.arange(0, 5000, 100)
+np.random.seed(42)
+
+# Sinyal kontraksi otot & fatigue slope (Resistance mempertahankan gaya lebih stabil dibanding Kontrol)
+gaya_kontrol = 100 * np.exp(-0.00025 * waktu_ms) + np.random.normal(0, 2.5, len(waktu_ms))
+gaya_resistance = 145 * np.exp(-0.00009 * waktu_ms) + np.random.normal(0, 2.0, len(waktu_ms))
+
+# Kinetika konsumsi oksigen (VO2 ml/kg/min)
+vo2_kontrol = 42 + 18 * (1 - np.exp(-0.0008 * waktu_ms)) + np.random.normal(0, 0.8, len(waktu_ms))
+vo2_resistance = 48 + 31 * (1 - np.exp(-0.0012 * waktu_ms)) + np.random.normal(0, 0.8, len(waktu_ms))
+
+df_micro = pd.DataFrame({
+    "Waktu (ms)": waktu_ms,
+    "Gaya Kontraksi Kontrol (g)": gaya_kontrol,
+    "Gaya Kontraksi Resistance (g)": gaya_resistance,
+    "Kinetika VO2 Kontrol": vo2_kontrol,
+    "Kinetika VO2 Resistance": vo2_resistance
+}).set_index("Waktu (ms)")
+
+col_hf1, col_hf2 = st.columns(2)
+with col_hf1:
+    st.subheader("A. Sinyal Kontraksi Gastrocnemius & Fatigue Slope (ms)")
+    st.line_chart(df_micro[["Gaya Kontraksi Kontrol (g)", "Gaya Kontraksi Resistance (g)"]])
+    st.caption("Kelompok Resistance menunjukkan puncak gaya lebih tinggi dengan penurunan kelelahan (fatigue slope) yang jauh lebih landai.")
+
+with col_hf2:
+    st.subheader("B. Kinetika Konsumsi Oksigen (VO2 Kinetics)")
+    st.line_chart(df_micro[["Kinetika VO2 Kontrol", "Kinetika VO2 Resistance"]])
+    st.caption("Kinetika penyerapan oksigen mencapai steady-state lebih cepat dan tinggi pada kelompok Resistance Training.")
+
+# Strategi Alpha-Generating: Hypertrophy Alpha Index
+st.subheader("C. Strategi Alpha-Generating: Peringkat Hypertrophy Alpha Index")
+st.write("Indikator kuantitatif prediktif untuk mendeteksi tikus dengan respons hipertrofi mTOR paling optimal lebih awal sebelum terminasi histologi:")
+
+skala_alpha = {'Rendah': 1, 'Lemah': 1, 'Kurang': 1, 'Sedang': 2, 'Normal': 2, 'Cukup': 2, 'Tinggi': 3, 'Kuat': 3, 'Baik': 3, 'Sangat Kuat': 4, 'Sangat Baik': 4}
+df_alpha = df[["rat_id", "kelompok", "mtor_elisa_kualitatif", "kekuatan_otot_kualitatif", "endurance_vo2max_kualitatif", "histologi_mtor_persen"]].copy()
+
+# Menghitung skor Alpha Index (kombinasi bobot kekuatan, kinetika VO2, dan sinyal ELISA)
+skor_k = df_alpha["kekuatan_otot_kualitatif"].map(skala_alpha)
+skor_v = df_alpha["endurance_vo2max_kualitatif"].map(skala_alpha)
+skor_e = df_alpha["mtor_elisa_kualitatif"].map(skala_alpha)
+
+df_alpha["Hypertrophy Alpha Index"] = ((skor_k * 0.42 + skor_v * 0.34 + skor_e * 0.24) * 25).round(1)
+df_alpha["Sinyal Alpha"] = df_alpha["Hypertrophy Alpha Index"].apply(
+    lambda x: "STRONG ALPHA (Respons Optimal)" if x >= 85 else ("MODERATE ALPHA" if x >= 65 else "BASELINE (Non-Responder)")
+)
+df_alpha = df_alpha.sort_values(by="Hypertrophy Alpha Index", ascending=False)
+
+st.dataframe(
+    df_alpha[["rat_id", "kelompok", "Hypertrophy Alpha Index", "Sinyal Alpha", "histologi_mtor_persen"]],
+    use_container_width=True,
+    hide_index=True
+)
