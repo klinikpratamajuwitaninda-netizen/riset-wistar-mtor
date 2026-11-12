@@ -1,0 +1,9 @@
+rat_id,kelompok,histologi_mtor_persen,histologi_h_score,luas_serabut_csa_um2,mtor_elisa_kualitatif,kekuatan_otot_kualitatif,endurance_vo2max_kualitatif
+Wistar_01,Kontrol,28.4,85.2,1980,Rendah,Normal,Cukup
+Wistar_02,Kontrol,31.0,92.0,2050,Rendah,Normal,Cukup
+Wistar_03,Kontrol,26.5,79.5,1920,Rendah,Lemah,Kurang
+Wistar_04,Kontrol,30.2,88.4,2010,Sedang,Normal,Cukup
+Wistar_05,Resistance,74.8,224.0,3120,Tinggi,Sangat Kuat,Sangat Baik
+Wistar_06,Resistance,79.5,238.5,3280,Tinggi,Sangat Kuat,Sangat Baik
+Wistar_07,Resistance,71.2,213.6,2990,Sedang,Kuat,Baik
+Wistar_08,Resistance,77.6,232.8,3190,Tinggi,Sangat Kuat,Sangat Baik
