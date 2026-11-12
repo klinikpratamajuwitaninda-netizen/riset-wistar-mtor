@@ -10,7 +10,6 @@
     header { background: #1e3a8a; color: white; padding: 24px; text-align: center; }
     .container { max-width: 1100px; margin: 20px auto; padding: 24px; background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     .badge { display: inline-block; background: #e0e7ff; color: #1e3a8a; padding: 5px 12px; border-radius: 6px; font-size: 13px; margin: 0 6px 12px 0; font-weight: bold; }
-    .btn { display: inline-block; background: #2563eb; color: white; padding: 10px 16px; text-decoration: none; border-radius: 6px; font-size: 14px; margin-bottom: 20px; }
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 16px; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
@@ -29,9 +28,8 @@
     <div>
       <span class="badge">Kuantitatif: Histologi mTOR</span>
       <span class="badge">Kualitatif: ELISA, Kekuatan Otot & VO2 Max</span>
-      <span class="badge">Powered by Cloudflare</span>
+      <span class="badge">Cloudflare Pages Live</span>
     </div>
-    <a class="btn" href="LINK_STREAMLIT_ANDA" target="_blank">Buka Dashboard Interaktif Streamlit ↗</a>
 
     <div class="grid">
       <div>
@@ -58,52 +56,41 @@
   </div>
 
   <script>
-    // Membaca langsung file dataset_wistar_dummy.csv yang berada di folder yang sama
-    fetch('dataset_wistar_dummy.csv')
-      .then(res => res.text())
-      .then(csv => {
-        const rows = csv.trim().split('\n').slice(1);
-        const labels = [];
-        const values = [];
-        const colors = [];
-        const tbody = document.getElementById('dataTable');
+    const dataWistar = [
+      { id: 'Wistar_01', group: 'Kontrol', mtor: 28.4, elisa: 'Rendah', strength: 'Normal', vo2: 'Cukup' },
+      { id: 'Wistar_02', group: 'Kontrol', mtor: 31.0, elisa: 'Rendah', strength: 'Normal', vo2: 'Cukup' },
+      { id: 'Wistar_03', group: 'Kontrol', mtor: 26.5, elisa: 'Rendah', strength: 'Lemah', vo2: 'Kurang' },
+      { id: 'Wistar_04', group: 'Kontrol', mtor: 30.2, elisa: 'Sedang', strength: 'Normal', vo2: 'Cukup' },
+      { id: 'Wistar_05', group: 'Resistance', mtor: 74.8, elisa: 'Tinggi', strength: 'Sangat Kuat', vo2: 'Sangat Baik' },
+      { id: 'Wistar_06', group: 'Resistance', mtor: 79.5, elisa: 'Tinggi', strength: 'Sangat Kuat', vo2: 'Sangat Baik' },
+      { id: 'Wistar_07', group: 'Resistance', mtor: 71.2, elisa: 'Sedang', strength: 'Kuat', vo2: 'Baik' },
+      { id: 'Wistar_08', group: 'Resistance', mtor: 77.6, elisa: 'Tinggi', strength: 'Sangat Kuat', vo2: 'Sangat Baik' }
+    ];
 
-        rows.forEach(row => {
-          const cols = row.split(',');
-          const id = cols[0];
-          const group = cols[1];
-          const mtorPct = parseFloat(cols[2]);
-          const elisa = cols[4];
-          const strength = cols[5];
-          const vo2 = cols[6];
+    const tbody = document.getElementById('dataTable');
+    dataWistar.forEach(d => {
+      tbody.innerHTML += `<tr>
+        <td><b>${d.id}</b></td>
+        <td>${d.group}</td>
+        <td>${d.mtor}%</td>
+        <td>${d.elisa}</td>
+        <td>${d.strength}</td>
+        <td>${d.vo2}</td>
+      </tr>`;
+    });
 
-          labels.push(id);
-          values.push(mtorPct);
-          colors.push(group === 'Resistance' ? '#2563eb' : '#94a3b8');
-
-          tbody.innerHTML += `<tr>
-            <td><b>${id}</b></td>
-            <td>${group}</td>
-            <td>${mtorPct}%</td>
-            <td>${elisa}</td>
-            <td>${strength}</td>
-            <td>${vo2}</td>
-          </tr>`;
-        });
-
-        new Chart(document.getElementById('mtorChart'), {
-          type: 'bar',
-          data: {
-            labels: labels,
-            datasets: [{
-              label: 'Ekspresi Histologi mTOR (%)',
-              data: values,
-              backgroundColor: colors
-            }]
-          },
-          options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
-        });
-      });
+    new Chart(document.getElementById('mtorChart'), {
+      type: 'bar',
+      data: {
+        labels: dataWistar.map(d => d.id),
+        datasets: [{
+          label: 'Ekspresi Histologi mTOR (%)',
+          data: dataWistar.map(d => d.mtor),
+          backgroundColor: dataWistar.map(d => d.group === 'Resistance' ? '#2563eb' : '#94a3b8')
+        }]
+      },
+      options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
+    });
   </script>
 </body>
 </html>
