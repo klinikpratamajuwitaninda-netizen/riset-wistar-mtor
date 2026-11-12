@@ -191,3 +191,43 @@ with col_alg2:
 
     st.bar_chart(bobot_df)
     st.caption("Grafik menunjukkan seberapa besar pengaruh tiap indikator kualitatif dalam memprediksi skor histologi mTOR.")
+
+
+# ==============================================================================
+# TAMBAHAN: SIMULASI PREDIKSI ALGORITMA MACHINE LEARNING GAYA SPSS (CRT TREE)
+# ==============================================================================
+from sklearn.tree import DecisionTreeRegressor, export_text
+
+st.divider()
+st.header("Simulasi Prediksi Algoritma Machine Learning Gaya SPSS (CRT Decision Tree)")
+st.write("Simulasi pohon keputusan (Classification & Regression Tree / CRT ala SPSS) untuk memprediksi skor kuantitatif histologi mTOR *gastrocnemius* dari variabel kualitatif:")
+
+# Melatih model Decision Tree ala SPSS CRT
+skala_crt = {'Rendah': 1, 'Lemah': 1, 'Kurang': 1, 'Sedang': 2, 'Normal': 2, 'Cukup': 2, 'Tinggi': 3, 'Kuat': 3, 'Baik': 3, 'Sangat Kuat': 4, 'Sangat Baik': 4}
+X_crt = df[['mtor_elisa_kualitatif', 'kekuatan_otot_kualitatif', 'endurance_vo2max_kualitatif']].replace(skala_crt)
+y_crt = df['histologi_mtor_persen']
+
+spss_tree = DecisionTreeRegressor(max_depth=3, min_samples_leaf=1, random_state=42)
+spss_tree.fit(X_crt, y_crt)
+
+col_sim1, col_sim2 = st.columns([1.2, 1])
+
+with col_sim1:
+    st.subheader("A. Input Parameter Simulasi Subjek Baru")
+    sim_elisa = st.select_slider("1. Tingkat mTOR ELISA (Kualitatif):", options=["Rendah", "Sedang", "Tinggi"], value="Tinggi")
+    sim_kuat = st.select_slider("2. Kekuatan Otot (Kualitatif):", options=["Lemah", "Normal", "Kuat", "Sangat Kuat"], value="Sangat Kuat")
+    sim_vo2 = st.select_slider("3. Endurance & VO2 Max (Kualitatif):", options=["Kurang", "Cukup", "Baik", "Sangat Baik"], value="Sangat Baik")
+
+    data_uji = pd.DataFrame([[skala_crt[sim_elisa], skala_crt[sim_kuat], skala_crt[sim_vo2]]],
+                            columns=['mtor_elisa_kualitatif', 'kekuatan_otot_kualitatif', 'endurance_vo2max_kualitatif'])
+    prediksi_crt = spss_tree.predict(data_uji)[0]
+    kategori_pred = "Kelompok Resistance (Hipertrofi Aktif)" if prediksi_crt >= 50 else "Kelompok Kontrol (Basal)"
+
+    st.success(f"**Hasil Prediksi Node SPSS CRT:** **{prediksi_crt:.2f}%** Ekspresi Histologi mTOR")
+    st.info(f"**Klasifikasi Kelompok Otomatis:** {kategori_pred}")
+
+with col_sim2:
+    st.subheader("B. Struktur Aturan Pohon Keputusan (SPSS Tree Rules)")
+    aturan_pohon = export_text(spss_tree, feature_names=["mTOR_ELISA", "Kekuatan_Otot", "Endurance_VO2Max"])
+    st.code(aturan_pohon, language="text")
+    st.caption("Catatan: Skala 1 = Rendah/Lemah, 2 = Sedang/Normal, 3 = Tinggi/Kuat, 4 = Sangat Kuat/Baik.")
