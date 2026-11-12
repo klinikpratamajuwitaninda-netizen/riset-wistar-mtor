@@ -296,3 +296,40 @@ st.dataframe(
     use_container_width=True,
     hide_index=True
 )
+
+
+# ==============================================================================
+# TAMBAHAN: PREDIKSI MACHINE LEARNING SHORT-HORIZON DARI DATA MIKROSTRUKTUR
+# ==============================================================================
+from sklearn.linear_model import Ridge
+
+st.divider()
+st.header("Simulasi Prediksi Machine Learning Short-Horizon (Microstructure AI)")
+st.write("Model *Short-Horizon Predictive* (Ridge Regression) memprediksi skor akhir histologi mTOR *gastrocnemius* hanya dari rekaman sinyal mikrostruktur detik-detik awal latihan:")
+
+# Melatih model dari data mikrostruktur 8 tikus Wistar
+df_sh_train = pd.DataFrame({
+    "gaya_puncak_g": [102, 105, 95, 101, 146, 150, 138, 148],
+    "fatigue_drop_persen": [64, 62, 70, 65, 22, 20, 28, 21],
+    "kinetika_vo2_puncak": [59, 61, 55, 60, 79, 82, 74, 80],
+    "histologi_mtor_persen": df["histologi_mtor_persen"]
+})
+
+X_sh = df_sh_train[["gaya_puncak_g", "fatigue_drop_persen", "kinetika_vo2_puncak"]]
+y_sh = df_sh_train["histologi_mtor_persen"]
+
+model_sh = Ridge(alpha=1.0)
+model_sh.fit(X_sh, y_sh)
+
+col_sh1, col_sh2, col_sh3 = st.columns(3)
+with col_sh1:
+    in_gaya = st.slider("Puncak Kontraksi Gastrocnemius (gram):", min_value=80, max_value=170, value=145)
+with col_sh2:
+    in_fatigue = st.slider("Penurunan Gaya / Fatigue Slope (%):", min_value=10, max_value=80, value=22)
+with col_sh3:
+    in_vo2_kin = st.slider("Kinetika VO2 Puncak (ml/kg/min):", min_value=45, max_value=95, value=79)
+
+pred_sh = model_sh.predict(pd.DataFrame([[in_gaya, in_fatigue, in_vo2_kin]], columns=X_sh.columns))[0]
+pred_sh = max(15.0, min(95.0, pred_sh))
+
+st.success(f"**Hasil Prediksi Short-Horizon AI:** Skor Kuantitatif Histologi mTOR diprediksi mencapai **{pred_sh:.2f}%** ({'Respons Hipertrofi Tinggi' if pred_sh >= 60 else 'Respons Basal / Rendah'})")
