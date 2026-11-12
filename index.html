@@ -4,12 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Riset Wistar mTOR Gastrocnemius</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { font-family: Arial, sans-serif; margin: 0; background: #f4f6f9; color: #222; }
     header { background: #1e3a8a; color: white; padding: 24px; text-align: center; }
-    .container { max-width: 1100px; margin: 20px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .badge { display: inline-block; background: #e0e7ff; color: #1e3a8a; padding: 4px 10px; border-radius: 6px; font-size: 13px; margin-right: 6px; }
-    iframe { width: 100%; height: 750px; border: none; border-radius: 8px; margin-top: 16px; }
+    .container { max-width: 1100px; margin: 20px auto; padding: 24px; background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .badge { display: inline-block; background: #e0e7ff; color: #1e3a8a; padding: 5px 12px; border-radius: 6px; font-size: 13px; margin: 0 6px 12px 0; font-weight: bold; }
+    .btn { display: inline-block; background: #2563eb; color: white; padding: 10px 16px; text-decoration: none; border-radius: 6px; font-size: 14px; margin-bottom: 20px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 16px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #1e3a8a; color: white; }
+    tr:nth-child(even) { background: #f9fafb; }
+    @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -17,14 +24,86 @@
     <h1>Riset Biomolekuler & Fisiologi Tikus Wistar (N=8)</h1>
     <p>Evaluasi Resistance Training terhadap Ekspresi mTOR Gastrocnemius, ELISA, Kekuatan Otot & VO2 Max</p>
   </header>
+
   <div class="container">
     <div>
       <span class="badge">Kuantitatif: Histologi mTOR</span>
       <span class="badge">Kualitatif: ELISA, Kekuatan Otot & VO2 Max</span>
-      <span class="badge">Powered by Cloudflare & Streamlit</span>
+      <span class="badge">Powered by Cloudflare</span>
     </div>
-    <!-- Dashboard Streamlit tampil langsung di dalam halaman Cloudflare -->
-    <iframe src="LINK_STREAMLIT_ANDA/?embed=true"></iframe>
+    <a class="btn" href="LINK_STREAMLIT_ANDA" target="_blank">Buka Dashboard Interaktif Streamlit ↗</a>
+
+    <div class="grid">
+      <div>
+        <h3>1. Data Kuantitatif: Histologi mTOR (%)</h3>
+        <canvas id="mtorChart"></canvas>
+      </div>
+      <div>
+        <h3>2. Data Kualitatif & Ringkasan Subjek</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Kelompok</th>
+              <th>Histologi (%)</th>
+              <th>ELISA</th>
+              <th>Kekuatan</th>
+              <th>VO2 Max</th>
+            </tr>
+          </thead>
+          <tbody id="dataTable"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
+
+  <script>
+    // Membaca langsung file dataset_wistar_dummy.csv yang berada di folder yang sama
+    fetch('dataset_wistar_dummy.csv')
+      .then(res => res.text())
+      .then(csv => {
+        const rows = csv.trim().split('\n').slice(1);
+        const labels = [];
+        const values = [];
+        const colors = [];
+        const tbody = document.getElementById('dataTable');
+
+        rows.forEach(row => {
+          const cols = row.split(',');
+          const id = cols[0];
+          const group = cols[1];
+          const mtorPct = parseFloat(cols[2]);
+          const elisa = cols[4];
+          const strength = cols[5];
+          const vo2 = cols[6];
+
+          labels.push(id);
+          values.push(mtorPct);
+          colors.push(group === 'Resistance' ? '#2563eb' : '#94a3b8');
+
+          tbody.innerHTML += `<tr>
+            <td><b>${id}</b></td>
+            <td>${group}</td>
+            <td>${mtorPct}%</td>
+            <td>${elisa}</td>
+            <td>${strength}</td>
+            <td>${vo2}</td>
+          </tr>`;
+        });
+
+        new Chart(document.getElementById('mtorChart'), {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Ekspresi Histologi mTOR (%)',
+              data: values,
+              backgroundColor: colors
+            }]
+          },
+          options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
+        });
+      });
+  </script>
 </body>
 </html>
