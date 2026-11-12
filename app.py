@@ -559,3 +559,23 @@ with tab_testing:
         "- **v1.2:** Penambahan *High-Frequency Microstructure* (ms) dan *Hypertrophy Alpha Index*.\n"
         "- **v1.1:** Implementasi *Auto-SPSS Statistical Modelling* (Kuantitatif T-Test vs Kualitatif Chi-Square) & *Random Forest Regressor*."
     )
+
+
+# ==============================================================================
+# TAMBAHAN: VIDEO SIMULASI PROTOKOL RESISTANCE LADDER CLIMBING (KATROL GANDA)
+# ==============================================================================
+st.divider()
+st.header("Simulasi Protokol Eksperimen: Resistance Ladder Climbing (Katrol Ganda)")
+st.markdown("Visualisasi mekanisme pembebanan progresif pada tikus Wistar (katrol bawah terhubung ke *harness* subjek, katrol atas terhubung ke tumpukan beban) untuk menginduksi hipertrofi mTOR *m. gastrocnemius*.")
+
+col_vid1, col_vid2 = st.columns([1.5, 1])
+with col_vid1:
+    st.video("video_1.mp4", loop=True, autoplay=True, muted=True)
+
+with col_vid2:
+    st.subheader("Parameter Protokol Latihan")
+    st.markdown(
+        "- **Instrumen:** Tangga *Resistance Climbing* 3-jalur dengan sistem katrol bawah & atas.\n"
+        "- **Mekanisme Beban:** Tali dari *harness* punggung tikus ditarik melalui katrol bawah menuju katrol atas yang terhubung dengan beban pemberat.\n"
+        "- **Target Fisiologis:** Aktivasi jalur pensinyalan **mTOR** pada otot *gastrocnemius*, peningkatan luas serabut (CSA), kekuatan otot, dan kapasitas $\\text{VO}_2\\text{ max}$."
+    )
