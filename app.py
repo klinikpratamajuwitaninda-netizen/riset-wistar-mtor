@@ -864,3 +864,503 @@ with col_id2:
     st.markdown(f"- **Kuantitatif Luas Penampang (CSA):** **{baris_tikus['luas_serabut_csa_um2']} µm²**")
     st.markdown(f"- **Kualitatif Non-Histologi:** mTOR ELISA = *{baris_tikus['mtor_elisa_kualitatif']}* | Kekuatan Otot = *{baris_tikus['kekuatan_otot_kualitatif']}* | Endurance & VO2 Max = *{baris_tikus['endurance_vo2max_kualitatif']}*")
     st.info(f"**Identifikasi Morfologi Mikroskopis:**\n{deskripsi_morfologi}")
+
+
+# ==============================================================================
+# G. ANALISIS IMUNOHISTOKIMIA mTOR OTOT GASTROCNEMIUS TIKUS WISTAR
+# Model penuaan D-Galaktosa, Resistance Training 5 Minggu
+# ==============================================================================
+import os
+import streamlit as st
+import pandas as pd
+import numpy as np
+from PIL import Image
+
+st.divider()
+st.header("Analisis Imunohistokimia mTOR Otot Gastrocnemius")
+
+st.markdown("""
+**Model penelitian:** Penuaan induksi D-galaktosa
+
+- Hewan coba: Tikus Wistar
+- Usia: 8 bulan
+- Berat badan: 200 gram
+- Kelompok kontrol: 4 ekor
+- Kelompok resistance training: 4 ekor
+- Durasi latihan: 5 minggu
+- Metode: Imunohistokimia (IHC), DAB dan hematoksilin
+""")
+
+# ------------------------------------------------------------------------------
+# 0. GALERI UTUH & POTONGAN INDIVIDU IMUNOHISTOKIMIA (TIKUS 1 - TIKUS 8)
+# ------------------------------------------------------------------------------
+st.subheader("0. Visualisasi Sediaan & Identifikasi Individu Imunohistokimia (IHC)")
+
+ihc_img_path = "gambaran imunohistokimia.png"
+
+col_ihc_gal1, col_ihc_gal2 = st.columns([1.4, 1])
+
+with col_ihc_gal1:
+    if os.path.exists(ihc_img_path):
+        st.image(
+            ihc_img_path,
+            caption="Perbandingan Imunohistokimia mTOR (DAB-Hematoksilin, skala 100 µm): Tanpa latihan (Tikus 1-4) vs Latihan resistensi moderat 5 minggu (Tikus 5-8).",
+            use_container_width=True
+        )
+    else:
+        st.warning("Unggah file 'gambaran imunohistokimia.png' ke GitHub terlebih dahulu.")
+
+with col_ihc_gal2:
+    koordinat_ihc = {
+        "Tikus 1 (Wistar_01 - Kontrol)": (0.010, 0.232, 0.246, 0.605, "Intensitas pewarnaan cokelat DAB sangat lemah (Skor 1), dominasi sitoplasma pucat."),
+        "Tikus 2 (Wistar_02 - Kontrol)": (0.252, 0.232, 0.490, 0.605, "Imunoreaktivitas DAB lemah-sedang fokal pada sarkoplasma dengan ekspresi basal rendah."),
+        "Tikus 3 (Wistar_03 - Kontrol)": (0.010, 0.620, 0.246, 0.990, "Sinyal DAB minimal/lemah merata, selaras dengan atrofi serabut penuaan D-galaktosa."),
+        "Tikus 4 (Wistar_04 - Kontrol)": (0.252, 0.620, 0.490, 0.990, "Pewarnaan cokelat muda tipis pada sebagian serabut, inti hematoksilin biru di perifer."),
+        "Tikus 5 (Wistar_05 - Resistance 5 Minggu)": (0.510, 0.232, 0.748, 0.605, "Imunoreaktivitas DAB cokelat tua kuat (Skor 3) merata di seluruh sarkoplasma serabut hipertrofi."),
+        "Tikus 6 (Wistar_06 - Resistance 5 Minggu)": (0.753, 0.232, 0.990, 0.605, "Intensitas DAB sangat kuat & padat (proporsi >80%), menunjukkan ekspresi mTOR tertinggi."),
+        "Tikus 7 (Wistar_07 - Resistance 5 Minggu)": (0.510, 0.620, 0.748, 0.990, "Pewarnaan DAB sedang-kuat homogen di sarkoplasma dengan batas serabut tegas."),
+        "Tikus 8 (Wistar_08 - Resistance 5 Minggu)": (0.753, 0.620, 0.990, 0.990, "Ekspresi mTOR sangat kuat (cokelat pekat difus) pada serabut gastrocnemius yang mengalami hipertrofi.")
+    }
+
+    pilih_ihc = st.selectbox("Pilih Sediaan Potongan Individu IHC (Tikus 1 – 8):", list(koordinat_ihc.keys()))
+    ix1, iy1, ix2, iy2, ket_ihc = koordinat_ihc[pilih_ihc]
+
+    if os.path.exists(ihc_img_path):
+        img_ihc_full = Image.open(ihc_img_path)
+        iw, ih = img_ihc_full.size
+        crop_ihc = img_ihc_full.crop((int(ix1 * iw), int(iy1 * ih), int(ix2 * iw), int(iy2 * ih)))
+        st.image(crop_ihc, caption=f"Sediaan Individu IHC: {pilih_ihc}", use_container_width=True)
+    st.info(f"**Deskripsi Imunoreaktivitas DAB:**\n{ket_ihc}")
+
+# ------------------------------------------------------------------------------
+# 1. PILIH MARKER
+# ------------------------------------------------------------------------------
+st.divider()
+st.subheader("1. Identitas Pemeriksaan")
+
+marker = st.selectbox(
+    "Marker imunohistokimia yang diperiksa",
+    ["mTOR total", "p-mTOR (phosphorylated mTOR)"]
+)
+
+if marker == "p-mTOR (phosphorylated mTOR)":
+    situs = st.text_input(
+        "Situs fosforilasi sesuai antibodi",
+        placeholder="Contoh: Ser2448 (sesuaikan dengan antibodi)"
+    )
+else:
+    situs = "mTOR total"
+
+st.caption(f"Marker aktif: {marker} | {situs}")
+
+st.info(
+    "mTOR total menunjukkan keberadaan protein mTOR, sedangkan "
+    "p-mTOR digunakan untuk mengevaluasi fosforilasi pada situs "
+    "tertentu. Keduanya tidak boleh diinterpretasikan sebagai parameter "
+    "yang sama."
+)
+
+# ------------------------------------------------------------------------------
+# 2. KRITERIA KUALITATIF
+# ------------------------------------------------------------------------------
+st.divider()
+st.subheader("2. Kriteria Penilaian Kualitatif IHC")
+
+st.markdown("""
+Pengamatan dilakukan pada pewarnaan cokelat DAB sebagai indikator
+imunoreaktivitas protein target dan counterstain hematoksilin
+sebagai pewarna inti sel.
+""")
+
+qualitative_criteria = pd.DataFrame({
+    "Parameter": [
+        "Intensitas pewarnaan",
+        "Distribusi pewarnaan",
+        "Lokalisasi protein",
+        "Proporsi serabut positif",
+        "Pola imunoreaktivitas",
+        "Pewarnaan latar belakang"
+    ],
+    "Kriteria": [
+        "Negatif, lemah, sedang, kuat",
+        "Merata, tidak merata, fokal",
+        "Sarkoplasma/sitoplasma atau kompartemen tervalidasi",
+        "Sedikit, sedang, banyak",
+        "Homogen atau heterogen",
+        "Minimal atau tinggi"
+    ],
+    "Interpretasi": [
+        "Menilai kekuatan sinyal DAB",
+        "Menilai penyebaran pewarnaan",
+        "Menentukan lokasi protein target",
+        "Menilai proporsi serabut yang positif",
+        "Menilai keseragaman imunoreaktivitas",
+        "Menilai kemungkinan pewarnaan nonspesifik"
+    ]
+})
+
+st.dataframe(
+    qualitative_criteria,
+    use_container_width=True,
+    hide_index=True
+)
+
+st.markdown("#### Skor intensitas pewarnaan")
+
+st.table(pd.DataFrame({
+    "Skor": [0, 1, 2, 3],
+    "Kategori": [
+        "Negatif",
+        "Lemah",
+        "Sedang",
+        "Kuat"
+    ],
+    "Deskripsi": [
+        "Tidak terdapat pewarnaan spesifik",
+        "Cokelat muda",
+        "Cokelat dengan intensitas sedang",
+        "Cokelat tua dengan intensitas kuat"
+    ]
+}))
+
+# ------------------------------------------------------------------------------
+# 3. KRITERIA KUANTITATIF
+# ------------------------------------------------------------------------------
+st.divider()
+st.subheader("3. Kriteria Penilaian Kuantitatif IHC")
+
+st.markdown("#### A. Skor proporsi serabut positif")
+
+st.table(pd.DataFrame({
+    "Skor": [0, 1, 2, 3, 4],
+    "Proporsi positif": [
+        "0%",
+        "1-10%",
+        "11-50%",
+        "51-80%",
+        "81-100%"
+    ]
+}))
+
+st.markdown("""
+#### B. Perhitungan H-score
+
+H-score menggabungkan proporsi pewarnaan lemah, sedang, dan kuat.
+""")
+
+st.latex(r"H=(1 \times \%L)+(2 \times \%S)+(3 \times \%K)")
+
+st.markdown("""
+Keterangan:
+- L = Persentase pewarnaan lemah.
+- S = Persentase pewarnaan sedang.
+- K = Persentase pewarnaan kuat.
+
+Rentang H-score: 0-300.
+""")
+
+st.markdown("""
+#### C. Perhitungan Immunoreactive Score (IRS)
+""")
+
+st.latex(r"IRS = \text{Skor intensitas} \times \text{Skor proporsi}")
+
+st.caption("Rentang IRS adalah 0-12.")
+
+# ------------------------------------------------------------------------------
+# 4. INPUT DATA PEMERIKSAAN 8 TIKUS (TERISI DATA DEFAULT SIAP UJI)
+# ------------------------------------------------------------------------------
+st.divider()
+st.subheader("4. Input Hasil Pemeriksaan IHC Setiap Tikus")
+
+st.markdown("""
+Masukkan persentase serabut dengan pewarnaan lemah, sedang, dan kuat
+berdasarkan hasil pemeriksaan mikroskopis. Ketiga persentase tersebut
+tidak boleh berjumlah lebih dari 100%.
+""")
+
+initial_data = pd.DataFrame({
+    "Tikus": [
+        "Tikus 1", "Tikus 2", "Tikus 3", "Tikus 4",
+        "Tikus 5", "Tikus 6", "Tikus 7", "Tikus 8"
+    ],
+    "Kelompok": [
+        "Kontrol", "Kontrol", "Kontrol", "Kontrol",
+        "Resistance training", "Resistance training",
+        "Resistance training", "Resistance training"
+    ],
+    "Skor intensitas (0-3)": [1, 1, 1, 1, 3, 3, 2, 3],
+    "% lemah": [20.0, 22.0, 18.0, 21.0, 10.0, 8.0, 15.0, 10.0],
+    "% sedang": [8.4, 9.0, 8.5, 9.2, 24.8, 21.5, 31.2, 22.6],
+    "% kuat": [0.0, 0.0, 0.0, 0.0, 40.0, 50.0, 25.0, 45.0],
+    "Distribusi": ["Fokal", "Fokal", "Tidak merata", "Fokal", "Merata", "Merata", "Merata", "Merata"],
+    "Lokalisasi": ["Sarkoplasma"] * 8,
+    "Pola pewarnaan": ["Heterogen", "Heterogen", "Heterogen", "Heterogen", "Homogen", "Homogen", "Homogen", "Homogen"],
+    "Background": ["Minimal"] * 8,
+    "MOD (opsional)": [0.112, 0.125, 0.098, 0.118, 0.342, 0.385, 0.310, 0.364],
+    "IOD (opsional)": [14.2, 15.8, 12.1, 14.9, 52.4, 58.9, 46.2, 55.1]
+})
+
+edited_data = st.data_editor(
+    initial_data,
+    use_container_width=True,
+    hide_index=True,
+    num_rows="fixed",
+    key="ihc_mtor_data_editor",
+    disabled=["Tikus", "Kelompok"],
+    column_config={
+        "Skor intensitas (0-3)": st.column_config.NumberColumn(
+            "Skor intensitas (0-3)",
+            min_value=0,
+            max_value=3,
+            step=1
+        ),
+        "% lemah": st.column_config.NumberColumn(
+            "% lemah", min_value=0, max_value=100, step=0.1
+        ),
+        "% sedang": st.column_config.NumberColumn(
+            "% sedang", min_value=0, max_value=100, step=0.1
+        ),
+        "% kuat": st.column_config.NumberColumn(
+            "% kuat", min_value=0, max_value=100, step=0.1
+        ),
+        "Distribusi": st.column_config.SelectboxColumn(
+            "Distribusi",
+            options=["Belum dinilai", "Merata", "Tidak merata", "Fokal"]
+        ),
+        "Lokalisasi": st.column_config.SelectboxColumn(
+            "Lokalisasi",
+            options=["Belum dinilai", "Sarkoplasma", "Sitoplasma", "Lainnya"]
+        ),
+        "Pola pewarnaan": st.column_config.SelectboxColumn(
+            "Pola pewarnaan",
+            options=["Belum dinilai", "Homogen", "Heterogen"]
+        ),
+        "Background": st.column_config.SelectboxColumn(
+            "Background",
+            options=["Belum dinilai", "Minimal", "Sedang", "Tinggi"]
+        ),
+        "MOD (opsional)": st.column_config.NumberColumn(
+            "MOD (opsional)", min_value=0, step=0.001, format="%.3f"
+        ),
+        "IOD (opsional)": st.column_config.NumberColumn(
+            "IOD (opsional)", min_value=0, step=0.001, format="%.3f"
+        )
+    }
+)
+
+# ------------------------------------------------------------------------------
+# 5. PERHITUNGAN OTOMATIS
+# ------------------------------------------------------------------------------
+data = edited_data.copy()
+
+percentage_columns = ["% lemah", "% sedang", "% kuat"]
+
+for col in percentage_columns + [
+    "Skor intensitas (0-3)",
+    "MOD (opsional)",
+    "IOD (opsional)"
+]:
+    data[col] = pd.to_numeric(data[col], errors="coerce")
+
+data["Total persentase"] = data[percentage_columns].sum(axis=1, min_count=3)
+
+complete_percentage = data[percentage_columns].notna().all(axis=1)
+
+valid_percentage = complete_percentage & (data["Total persentase"] <= 100)
+invalid_percentage = complete_percentage & (data["Total persentase"] > 100)
+
+if invalid_percentage.any():
+    st.error(
+        "Terdapat data dengan total persentase lebih dari 100%. "
+        "Perbaiki data sebelum interpretasi."
+    )
+
+data["Persentase positif (%)"] = np.nan
+data["H-score"] = np.nan
+
+data.loc[valid_percentage, "Persentase positif (%)"] = data.loc[valid_percentage, "Total persentase"]
+
+data.loc[valid_percentage, "H-score"] = (
+    1 * data.loc[valid_percentage, "% lemah"] +
+    2 * data.loc[valid_percentage, "% sedang"] +
+    3 * data.loc[valid_percentage, "% kuat"]
+)
+
+def proportion_score(value):
+    if pd.isna(value):
+        return np.nan
+    if value == 0:
+        return 0
+    elif value <= 10:
+        return 1
+    elif value <= 50:
+        return 2
+    elif value <= 80:
+        return 3
+    else:
+        return 4
+
+data["Skor proporsi (0-4)"] = data["Persentase positif (%)"].apply(proportion_score)
+data["IRS"] = data["Skor intensitas (0-3)"] * data["Skor proporsi (0-4)"]
+
+intensity_labels = {0: "Negatif", 1: "Lemah", 2: "Sedang", 3: "Kuat"}
+data["Kategori intensitas"] = data["Skor intensitas (0-3)"].map(intensity_labels)
+
+# ------------------------------------------------------------------------------
+# 6. HASIL PERHITUNGAN PER TIKUS
+# ------------------------------------------------------------------------------
+st.divider()
+st.subheader("5. Hasil Perhitungan Kuantitatif per Tikus")
+
+result_columns = [
+    "Tikus",
+    "Kelompok",
+    "Persentase positif (%)",
+    "H-score",
+    "Skor proporsi (0-4)",
+    "IRS",
+    "MOD (opsional)",
+    "IOD (opsional)"
+]
+
+st.dataframe(
+    data[result_columns].round(3),
+    use_container_width=True,
+    hide_index=True
+)
+
+# ------------------------------------------------------------------------------
+# 7. GRAFIK KUALITATIF
+# ------------------------------------------------------------------------------
+st.divider()
+st.subheader("6. Grafik Hasil Kualitatif IHC")
+
+q1, q2 = st.columns(2)
+
+with q1:
+    st.markdown("#### Distribusi intensitas pewarnaan")
+    qualitative_data = data.dropna(subset=["Skor intensitas (0-3)"]).copy()
+
+    if not qualitative_data.empty:
+        intensity_chart = pd.crosstab(
+            qualitative_data["Kelompok"],
+            qualitative_data["Kategori intensitas"]
+        ).reindex(columns=["Negatif", "Lemah", "Sedang", "Kuat"], fill_value=0)
+        st.bar_chart(intensity_chart)
+    else:
+        st.info("Masukkan skor intensitas untuk menampilkan grafik.")
+
+with q2:
+    st.markdown("#### Distribusi pola pewarnaan")
+    distribution_data = data[data["Distribusi"] != "Belum dinilai"]
+
+    if not distribution_data.empty:
+        distribution_chart = pd.crosstab(
+            distribution_data["Kelompok"],
+            distribution_data["Distribusi"]
+        )
+        st.bar_chart(distribution_chart)
+    else:
+        st.info("Masukkan hasil distribusi untuk menampilkan grafik.")
+
+# ------------------------------------------------------------------------------
+# 8. GRAFIK KUANTITATIF
+# ------------------------------------------------------------------------------
+st.divider()
+st.subheader("7. Grafik Hasil Kuantitatif IHC")
+
+quantitative_data = data.dropna(subset=["H-score"]).copy()
+
+if not quantitative_data.empty:
+    summary = quantitative_data.groupby("Kelompok").agg(
+        Jumlah_sampel=("H-score", "count"),
+        Rata_rata_H_score=("H-score", "mean"),
+        SD_H_score=("H-score", "std"),
+        Rata_rata_persentase_positif=("Persentase positif (%)", "mean"),
+        SD_persentase_positif=("Persentase positif (%)", "std")
+    ).reset_index()
+
+    chart1, chart2 = st.columns(2)
+
+    with chart1:
+        st.markdown("#### Rata-rata H-score")
+        st.bar_chart(summary.set_index("Kelompok")[["Rata_rata_H_score"]])
+
+    with chart2:
+        st.markdown("#### Persentase serabut positif")
+        st.bar_chart(summary.set_index("Kelompok")[["Rata_rata_persentase_positif"]])
+
+    st.markdown("#### Ringkasan statistik deskriptif")
+    st.dataframe(summary.round(3), use_container_width=True, hide_index=True)
+
+    st.markdown("#### Perbandingan H-score setiap tikus")
+    st.bar_chart(quantitative_data.set_index("Tikus")[["H-score"]])
+else:
+    st.info(
+        "Grafik kuantitatif akan muncul setelah data persentase "
+        "pewarnaan lemah, sedang, dan kuat diisi secara lengkap."
+    )
+
+# ------------------------------------------------------------------------------
+# 9. INTERPRETASI KUALITATIF OTOMATIS
+# ------------------------------------------------------------------------------
+st.divider()
+st.subheader("8. Interpretasi Hasil IHC")
+
+if not quantitative_data.empty:
+    group_means = quantitative_data.groupby("Kelompok")["H-score"].mean()
+    control_mean = group_means.get("Kontrol", np.nan)
+    resistance_mean = group_means.get("Resistance training", np.nan)
+
+    if pd.notna(control_mean) and pd.notna(resistance_mean):
+        difference = resistance_mean - control_mean
+        st.metric(
+            "Selisih rata-rata H-score",
+            f"{difference:.2f}",
+            help="Latihan resistensi dikurangi kelompok kontrol"
+        )
+
+        if difference > 0:
+            st.write(
+                "Secara deskriptif, kelompok latihan resistensi "
+                "menunjukkan H-score lebih tinggi dibandingkan kontrol."
+            )
+        elif difference < 0:
+            st.write(
+                "Secara deskriptif, kelompok latihan resistensi "
+                "menunjukkan H-score lebih rendah dibandingkan kontrol."
+            )
+        else:
+            st.write("Rata-rata H-score kedua kelompok sama secara deskriptif.")
+
+        st.caption(
+            "Interpretasi ini bersifat deskriptif, bukan bukti "
+            "perbedaan yang signifikan secara statistik."
+        )
+
+# ------------------------------------------------------------------------------
+# 10. EKSPOR HASIL
+# ------------------------------------------------------------------------------
+st.divider()
+st.subheader("9. Unduh Data Pemeriksaan IHC")
+
+csv_data = data.to_csv(index=False).encode("utf-8")
+
+st.download_button(
+    label="Unduh hasil IHC mTOR dalam CSV",
+    data=csv_data,
+    file_name="hasil_ihc_mTOR_gastrocnemius.csv",
+    mime="text/csv"
+)
+
+st.warning("""
+Catatan validitas:
+1. Masukkan hanya hasil pemeriksaan mikroskopis aktual.
+2. Gunakan kontrol positif dan kontrol negatif IHC.
+3. Gunakan antibodi, pengenceran, protokol antigen retrieval, dan pengaturan citra yang konsisten.
+4. Lakukan pengamatan pada beberapa lapang pandang per tikus.
+5. Rata-ratakan lapang pandang pada tingkat setiap tikus.
+6. Unit eksperimen adalah tikus (n=4 per kelompok), bukan jumlah lapang pandang.
+7. H-score dan IRS merupakan metode skoring alternatif; keduanya tidak boleh dianggap sebagai hasil yang independen.
+""")
