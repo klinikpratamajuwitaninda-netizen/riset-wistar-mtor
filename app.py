@@ -1498,3 +1498,37 @@ def jalankan_model_prediksi(df_input):
 # Jalankan otomatis jika ada data simulasi aktif
 if 'df' in locals() and not df.empty:
     df = jalankan_model_prediksi(df)
+
+# =========================================================
+# SIMULASI MODEL PREDIKSI MOBILE IOT (SEOLAH-OLAH ALAT SUDAH ADA)
+# =========================================================
+import numpy as np
+
+st.divider()
+st.header("📡 Simulasi Real-Time Mobile IoT & Prediksi AI")
+st.markdown("Panel ini mensimulasikan data yang nantinya dikirim oleh perangkat ESP32 dan MPU6050 saat alatnya sudah terpasang pada tikus Wistar.")
+
+if st.button("🚀 Jalankan Simulasi Data Sensor & Prediksi"):
+    # Membuat data buatan seolah-olah dari sensor gerak
+    np.random.seed(42)
+    waktu_sim = [f"12:00:0{i}" for i in range(5)]
+    gaya_gerak = [1.2, 3.8, 1.1, 4.2, 2.5] # Simulasi angka akselerasi
+    
+    df_ simulasi_iot = pd.DataFrame({
+        "Waktu": waktu_sim,
+        "Akselerasi_Dinamis": gaya_gerak
+    })
+    
+    # Logika prediksi otomatis berdasarkan data buatan
+    status_prediksi = []
+    for val in gaya_gerak:
+        if val > 3.0:
+            status_prediksi.append("High Intensity (Aktif Memanjat)")
+        else:
+            status_prediksi.append("Low Intensity (Istirahat / Normal)")
+            
+    df_simulasi_iot["Status_Prediksi_ML"] = status_prediksi
+    
+    st.success("Berhasil menerima data simulasi dari perangkat IoT (Virtual ESP32)!")
+    st.dataframe(df_simulasi_iot, use_container_width=True, hide_index=True)
+    st.info("💡 Nanti, begitu alat fisik Anda datang, data pada tabel di atas akan berubah secara otomatis sesuai gerakan asli dari sensor!")
