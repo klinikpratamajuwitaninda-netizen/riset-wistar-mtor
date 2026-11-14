@@ -1036,6 +1036,342 @@ function jalankanUnitTestCloudflare() {
         &bull; <b>Interpretasi:</b> ${d.ket}
       `;
     }
+      
+// =====================================================
+// TAMBAHAN MOBILE IOT - SIMULASI ESP32 MPU6050
+// =====================================================
+
+(function () {
+
+  const canvasAcc = document.getElementById(
+    "iotAccelerationChart"
+  );
+
+  const canvasGyro = document.getElementById(
+    "iotGyroChart"
+  );
+
+  if (!canvasAcc || !canvasGyro) {
+    console.warn("Elemen Mobile IoT belum ditemukan.");
+    return;
+  }
+
+  // Penyimpanan data simulasi
+  const records = [];
+  const maxPoints = 50;
+
+  const labels = [];
+  const accX = [];
+  const accY = [];
+  const accZ = [];
+  const gyroData = [];
+
+  let simulatedReps = 0;
+  let previousActive = false;
+  let lastRepTime = 0;
+
+  // Grafik Accelerometer
+  const accelerationChart = new Chart(canvasAcc, {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: "Accelerometer X",
+          data: accX,
+          borderColor: "#2563eb",
+          tension: 0.3
+        },
+        {
+          label: "Accelerometer Y",
+          data: accY,
+          borderColor: "#16a34a",
+          tension: 0.3
+        },
+        {
+          label: "Accelerometer Z",
+          data: accZ,
+          borderColor: "#dc2626",
+          tension: 0.3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      animation: false,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "Akselerasi (m/s²)"
+          }
+        }
+      }
+    }
+  });
+
+  // Grafik Gyroscope
+  const gyroscopeChart = new Chart(canvasGyro, {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Gyroscope Magnitude",
+        data: gyroData,
+        borderColor: "#9333ea",
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      animation: false,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "Kecepatan sudut (°/s)"
+          }
+        }
+      }
+    }
+  });
+
+  // Klasifikasi aktivitas berbasis aturan
+  function predictActivity(ax, ay, az, gx, gy, gz) {
+
+    const magnitude = Math.sqrt(
+      ax * ax + ay * ay + az * az
+    );
+
+    const dynamicAcceleration = Math.abs(
+      magnitude - 9.80665
+    );
+
+    const gyro = Math.sqrt(
+      gx * gx + gy * gy + gz * gz
+    );
+
+    if (dynamicAcceleration < 0.8 && gyro < 10) {
+      return "Istirahat";
+    }
+
+    if (dynamicAcceleration < 2.5 && gyro < 40) {
+      return "Gerakan Ringan";
+    }
+
+    if (dynamicAcceleration < 5) {
+      return "Gerakan Aktif";
+    }
+
+    return "Gerakan Intens";
+  }
+
+  // Memperbarui tampilan
+  function updateDashboard(sensor) {
+
+    const {
+      ax, ay, az, gx, gy, gz
+    } = sensor;
+
+    const activity = predictActivity(
+      ax, ay, az, gx, gy, gz
+    );
+
+    const now = new Date();
+
+    const timeLabel = now.toLocaleTimeString();
+
+    const gyroMagnitude = Math.sqrt(
+      gx * gx + gy * gy + gz * gz
+    );
+
+    document.getElementById("iotAx").textContent =
+      ax.toFixed(2);
+
+    document.getElementById("iotAy").textContent =
+      ay.toFixed(2);
+
+    document.getElementById("iotAz").textContent =
+      az.toFixed(2);
+
+    document.getElementById("iotPrediction").textContent =
+      activity;
+
+    document.getElementById("iotConnection").textContent =
+      "SIMULASI VIRTUAL ESP32";
+
+    document.getElementById("iotLastUpdate").textContent =
+      "Update: " + timeLabel;
+
+    // Grafik sensor
+    labels.push(timeLabel);
+    accX.push(ax);
+    accY.push(ay);
+    accZ.push(az);
+    gyroData.push(gyroMagnitude);
+
+    if (labels.length > maxPoints) {
+      labels.shift();
+      accX.shift();
+      accY.shift();
+      accZ.shift();
+      gyroData.shift();
+    }
+
+    accelerationChart.update("none");
+    gyroscopeChart.update("none");
+
+    // Simpan data
+    const ratId = document.getElementById("iotRat").value;
+
+    const record = {
+      waktu: now.toISOString(),
+      id_tikus: ratId,
+      ax: ax,
+      ay: ay,
+      az: az,
+      gx: gx,
+      gy: gy,
+      gz: gz,
+      aktivitas: activity
+    };
+
+    records.push(record);
+
+    if (records.length > 1000) {
+      records.shift();
+    }
+
+    // Tabel riwayat
+    const table = document.getElementById("iotDataTable");
+
+    table.innerHTML = "";
+
+    records.slice(-15).reverse().forEach(item => {
+
+      const row = table.insertRow();
+
+      [
+        new Date(item.waktu).toLocaleTimeString(),
+        item.id_tikus,
+        item.ax.toFixed(2),
+        item.ay.toFixed(2),
+        item.az.toFixed(2),
+        Math.sqrt(
+          item.gx ** 2 +
+          item.gy ** 2 +
+          item.gz ** 2
+        ).toFixed(2),
+        item.aktivitas
+      ].forEach(value => {
+
+        const cell = row.insertCell();
+        cell.textContent = value;
+
+      });
+
+    });
+
+    // Deteksi kejadian gerakan simulasi
+    const active = activity === "Gerakan Aktif" ||
+                   activity === "Gerakan Intens";
+
+    if (
+      active &&
+      !previousActive &&
+      Date.now() - lastRepTime > 2000
+    ) {
+      simulatedReps++;
+      lastRepTime = Date.now();
+    }
+
+    previousActive = active;
+
+    document.getElementById("iotReps").textContent =
+      simulatedReps + " / 10 (simulasi)";
+  }
+
+  // Membuat simulasi gerakan
+  function generateVirtualSensor() {
+
+    const active = Math.random() > 0.45;
+
+    const intensity = active ? 1 : 0.12;
+
+    const ax = (Math.random() - 0.5) * 5 * intensity;
+    const ay = (Math.random() - 0.5) * 4 * intensity;
+
+    const az =
+      9.80665 +
+      (Math.random() - 0.5) * 7 * intensity;
+
+    const gx = (Math.random() - 0.5) * 100 * intensity;
+    const gy = (Math.random() - 0.5) * 100 * intensity;
+    const gz = (Math.random() - 0.5) * 100 * intensity;
+
+    updateDashboard({
+      ax, ay, az, gx, gy, gz
+    });
+  }
+
+  // Download CSV
+  window.downloadIotCSV = function () {
+
+    if (records.length === 0) {
+      alert("Belum ada data sensor.");
+      return;
+    }
+
+    const headers = [
+      "Waktu",
+      "ID Tikus",
+      "Ax",
+      "Ay",
+      "Az",
+      "Gx",
+      "Gy",
+      "Gz",
+      "Aktivitas"
+    ];
+
+    const rows = records.map(item => [
+      item.waktu,
+      item.id_tikus,
+      item.ax,
+      item.ay,
+      item.az,
+      item.gx,
+      item.gy,
+      item.gz,
+      item.aktivitas
+    ]);
+
+    const csv = [
+      headers.join(","),
+      ...rows.map(row => row.join(","))
+    ].join("\n");
+
+    const blob = new Blob(
+      [csv],
+      { type: "text/csv;charset=utf-8;" }
+    );
+
+    const link = document.createElement("a");
+
+    link.href = URL.createObjectURL(blob);
+    link.download = "wistar_mobile_iot_simulasi.csv";
+    link.click();
+
+    URL.revokeObjectURL(link.href);
+  };
+
+  // Jalankan simulasi otomatis
+  generateVirtualSensor();
+
+  setInterval(generateVirtualSensor, 500);
+
+})();
+
   </script>
 </body>
 </html>
