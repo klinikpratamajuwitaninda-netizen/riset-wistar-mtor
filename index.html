@@ -19,6 +19,134 @@
     th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
     th { background: #1e3a8a; color: white; }
     @media (max-width: 768px) { .grid, .ml-inputs { grid-template-columns: 1fr; } }
+ 
+/* =====================================
+   WISTAR RESEARCH - ULTRA NAVBAR EFFECT
+===================================== */
+
+.wistar-nav {
+    background: linear-gradient(
+        120deg,
+        #07152e,
+        #1e3a8a,
+        #2563eb,
+        #6d28d9,
+        #0e7490,
+        #07152e
+    ) !important;
+
+    background-size: 400% 400% !important;
+    animation: wistarGradient 10s ease infinite;
+
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    box-shadow: 0 8px 30px rgba(15,23,42,.4);
+    border-bottom: 1px solid rgba(255,255,255,.25);
+}
+
+@keyframes wistarGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Cahaya bergerak */
+.wistar-nav::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -40%;
+    width: 25%;
+    height: 100%;
+    pointer-events: none;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.3),
+        transparent
+    );
+
+    transform: skewX(-25deg);
+    animation: wistarLight 6s infinite;
+}
+
+@keyframes wistarLight {
+    0%, 15% { left: -40%; }
+    75%, 100% { left: 130%; }
+}
+
+/* Tombol navigasi */
+.wistar-nav a {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.25) !important;
+    border-radius: 10px !important;
+    transition: all .35s ease !important;
+    backdrop-filter: blur(8px);
+}
+
+/* Hover tombol */
+.wistar-nav a:hover {
+    transform: translateY(-5px) scale(1.05);
+    background: rgba(255,255,255,.28) !important;
+    border-color: #93c5fd !important;
+
+    box-shadow:
+        0 0 15px rgba(96,165,250,.7),
+        0 8px 20px rgba(0,0,0,.25);
+
+    color: white !important;
+}
+
+/* Garis bercahaya */
+.wistar-nav a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: #67e8f9;
+    transform: translateX(-50%);
+    transition: width .3s ease;
+}
+
+.wistar-nav a:hover::after {
+    width: 80%;
+}
+
+/* Efek judul */
+.wistar-nav span {
+    color: white !important;
+    letter-spacing: 1px;
+    text-shadow: 0 0 12px #60a5fa;
+}
+
+/* Tampilan smartphone */
+@media(max-width:768px) {
+    .wistar-nav {
+        gap: 7px !important;
+        padding: 10px !important;
+    }
+
+    .wistar-nav a {
+        font-size: 11px !important;
+        padding: 8px !important;
+    }
+}
+
+/* Aksesibilitas */
+@media(prefers-reduced-motion: reduce) {
+    .wistar-nav,
+    .wistar-nav::before,
+    .wistar-nav a {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
   </style>
 </head>
   <body>
