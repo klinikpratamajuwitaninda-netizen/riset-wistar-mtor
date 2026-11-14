@@ -4,7 +4,96 @@ from scipy import stats
 from sklearn.ensemble import RandomForestRegressor
 
 st.set_page_config(page_title="Dashboard Riset Wistar mTOR", layout="wide")
+# ==============================================================================
+# MENU BAR NAVIGASI ATAS, SIDEBAR & TAMPILAN MODERN (TAMBAHAN TANPA HAPUS KODE)
+# ==============================================================================
+st.markdown("""
+<style>
+/* Mempercantik tampilan halaman secara keseluruhan */
+html { scroll-behavior: smooth; }
+.top-navbar {
+    background: linear-gradient(90deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%);
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 15px rgba(30, 58, 138, 0.2);
+}
+.top-navbar-title {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 0.3px;
+}
+.nav-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.nav-pills a {
+    color: #f8fafc !important;
+    text-decoration: none !important;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 7px 13px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    transition: all 0.2s ease;
+}
+.nav-pills a:hover {
+    background: #ffffff;
+    color: #1e3a8a !important;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+/* Mempertegas kartu metrik dan tabel */
+div[data-testid="stMetric"] {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 12px 16px;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+</style>
 
+<div class="top-navbar">
+    <div class="top-navbar-title">🧭 Navigasi Cepat Dashboard Riset Wistar mTOR</div>
+    <div class="nav-pills">
+        <a href="#algoritma-auto-spss-analisis-pengaruh-faktor-feature-importance">📊 Auto-SPSS & ML</a>
+        <a href="#simulasi-prediksi-algoritma-machine-learning-gaya-spss-crt-decision-tree">🌳 Simulasi CRT</a>
+        <a href="#analisis-data-mikrostruktur-berfrekuensi-tinggi-alpha-generating">⚡ Mikrostruktur & Alpha</a>
+        <a href="#asisten-riset-ai-model-context-protocol-ai-agents-mcp-tooling">🤖 Asisten AI & MCP</a>
+        <a href="#simulasi-kueri-data-cloud-snowflake-databricks-query-optimization">☁️ Cloud SQL</a>
+        <a href="#rubrik-evaluasi-model-automated-testing-model-rubrics-audit-log">✅ Rubrik & Audit</a>
+        <a href="#simulasi-protokol-eksperimen-resistance-ladder-climbing-katrol-ganda">🎥 Video Katrol</a>
+        <a href="#histologi-otot-gastrocnemius-tikus-wistar">🔬 Histologi (H&E)</a>
+        <a href="#identifikasi-individu-histologi-otot-gastrocnemius-tikus-1-tikus-8">🔍 Zoom H&E (1-8)</a>
+        <a href="#analisis-imunohistokimia-mtor-otot-gastrocnemius">🧪 Imunohistokimia (IHC)</a>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# Menu Navigasi di Panel Samping Kiri (Sidebar)
+with st.sidebar:
+    st.markdown("## 🧬 Menu Riset Wistar")
+    st.caption("Model Penuaan D-Galaktosa & Latihan Resistensi 5 Minggu (N=8)")
+    st.markdown("""
+    **Pilih Modul Analisis:**
+    - [📊 Auto-SPSS & Bobot ML](#algoritma-auto-spss-analisis-pengaruh-faktor-feature-importance)
+    - [🌳 Pohon Keputusan SPSS CRT](#simulasi-prediksi-algoritma-machine-learning-gaya-spss-crt-decision-tree)
+    - [⚡ Mikrostruktur & Alpha Index](#analisis-data-mikrostruktur-berfrekuensi-tinggi-alpha-generating)
+    - [📈 Prediksi Short-Horizon](#simulasi-prediksi-machine-learning-short-horizon-microstructure-ai)
+    - [🤖 Asisten AI & MCP Tooling](#asisten-riset-ai-model-context-protocol-ai-agents-mcp-tooling)
+    - [☁️ Cloud SQL (Snowflake)](#simulasi-kueri-data-cloud-snowflake-databricks-query-optimization)
+    - [✅ Rubrik & Automated Test](#rubrik-evaluasi-model-automated-testing-model-rubrics-audit-log)
+    - [🎥 Video Alat Katrol Ganda](#simulasi-protokol-eksperimen-resistance-ladder-climbing-katrol-ganda)
+    - [🔬 Histologi Otot (H&E)](#histologi-otot-gastrocnemius-tikus-wistar)
+    - [🔍 Identifikasi H&E (Tikus 1-8)](#identifikasi-individu-histologi-otot-gastrocnemius-tikus-1-tikus-8)
+    - [🧪 Imunohistokimia (IHC mTOR)](#analisis-imunohistokimia-mtor-otot-gastrocnemius)
+    """)
+    st.divider()
+    st.info("💡 **Tips:** Klik salah satu tombol menu di atas atau di sidebar ini untuk langsung melompat ke modul yang diinginkan.")
 st.title("Analisis Resistance Training pada 8 Tikus Wistar")
 st.markdown("**Kuantitatif:** Histologi mTOR *Gastrocnemius* | **Kualitatif:** mTOR ELISA, Kekuatan Otot, Endurance & VO2 Max")
 
