@@ -1514,7 +1514,7 @@ if st.button("🚀 Jalankan Simulasi Data Sensor & Prediksi"):
     waktu_sim = [f"12:00:0{i}" for i in range(5)]
     gaya_gerak = [1.2, 3.8, 1.1, 4.2, 2.5] # Simulasi angka akselerasi
     
-    df_ simulasi_iot = pd.DataFrame({
+    df_simulasi_iot = pd.DataFrame({
         "Waktu": waktu_sim,
         "Akselerasi_Dinamis": gaya_gerak
     })
@@ -1532,3 +1532,144 @@ if st.button("🚀 Jalankan Simulasi Data Sensor & Prediksi"):
     st.success("Berhasil menerima data simulasi dari perangkat IoT (Virtual ESP32)!")
     st.dataframe(df_simulasi_iot, use_container_width=True, hide_index=True)
     st.info("💡 Nanti, begitu alat fisik Anda datang, data pada tabel di atas akan berubah secara otomatis sesuai gerakan asli dari sensor!")
+# ==============================================================================
+# TAMBAHAN MODUL: PROTOTIPE PREDIKSI AKTIVITAS MOBILE IoT (TANPA MENGUBAH MODUL LAMA)
+# Catatan: model di bawah memakai data sintetis untuk uji antarmuka saja.
+# Model belum tervalidasi dan tidak boleh dipakai sebagai hasil biologis.
+# ==============================================================================
+
+from sklearn.ensemble import RandomForestClassifier
+
+st.divider()
+st.header("📡 Model Prediksi Aktivitas Tikus Wistar — Mobile IoT")
+st.markdown(
+    "Modul tambahan untuk mencoba klasifikasi pola gerak dari fitur MPU6050. "
+    "Saat ini menggunakan data sintetis karena perangkat ESP32/MPU6050 belum tersedia."
+)
+
+st.warning(
+    "MODE DEMONSTRASI: model dilatih dengan data sintetis, bukan rekaman tikus aktual. "
+    "Kategori di bawah hanya menunjukkan intensitas gerak sensor, bukan bukti beban "
+    "resistensi atau klasifikasi fisiologis yang tervalidasi."
+)
+
+@st.cache_resource
+def buat_model_demo_iot():
+    rng = np.random.default_rng(42)
+    n_per_kelas = 250
+    kelas = {
+        "Istirahat / gerak minimal": {
+            "acc": (0.00, 0.45), "gyro": (0.0, 10.0), "ratio": (0.0, 12.0)
+        },
+        "Aktivitas ringan": {
+            "acc": (0.30, 1.30), "gyro": (5.0, 30.0), "ratio": (8.0, 40.0)
+        },
+        "Aktivitas sedang": {
+            "acc": (0.90, 2.60), "gyro": (20.0, 80.0), "ratio": (35.0, 75.0)
+        },
+        "Aktivitas tinggi": {
+            "acc": (1.90, 5.00), "gyro": (55.0, 180.0), "ratio": (65.0, 100.0)
+        }
+    }
+    X_demo, y_demo = [], []
+    for label, batas in kelas.items():
+        for _ in range(n_per_kelas):
+            X_demo.append([
+                rng.uniform(*batas["acc"]),
+                rng.uniform(*batas["gyro"]),
+                rng.uniform(*batas["ratio"])
+            ])
+            y_demo.append(label)
+    model_demo = RandomForestClassifier(
+        n_estimators=150, max_depth=8, random_state=42,
+        class_weight="balanced"
+    )
+    model_demo.fit(
+        pd.DataFrame(X_demo, columns=[
+            "acc_rms_m_s2", "gyro_rms_deg_s", "movement_ratio_pct"
+        ]),
+        y_demo
+    )
+    return model_demo
+
+model_demo_iot = buat_model_demo_iot()
+
+st.subheader("A. Prediksi dari fitur sensor")
+st.caption(
+    "Masukkan fitur dari jendela pengamatan sensor. Movement ratio adalah "
+    "persentase waktu dalam jendela ketika gerakan melewati ambang yang sudah dikalibrasi."
+)
+
+pred_col1, pred_col2, pred_col3 = st.columns(3)
+with pred_col1:
+    input_acc_rms = st.number_input(
+        "Akselerasi dinamis RMS (m/s²)", min_value=0.0,
+        max_value=20.0, value=1.2, step=0.1, key="iot_acc_rms_demo"
+    )
+with pred_col2:
+    input_gyro_rms = st.number_input(
+        "Gyroscope RMS (°/s)", min_value=0.0,
+        max_value=500.0, value=35.0, step=1.0, key="iot_gyro_rms_demo"
+    )
+with pred_col3:
+    input_movement_ratio = st.slider(
+        "Rasio waktu bergerak (%)", min_value=0, max_value=100,
+        value=45, key="iot_movement_ratio_demo"
+    )
+
+fitur_input_iot = pd.DataFrame([{
+    "acc_rms_m_s2": input_acc_rms,
+    "gyro_rms_deg_s": input_gyro_rms,
+    "movement_ratio_pct": input_movement_ratio
+}])
+
+if st.button("🔎 Prediksi Aktivitas", type="primary", key="btn_prediksi_iot_demo"):
+    prediksi_iot = model_demo_iot.predict(fitur_input_iot)[0]
+    probabilitas_iot = model_demo_iot.predict_proba(fitur_input_iot)[0]
+    st.success(f"Klasifikasi demonstrasi: **{prediksi_iot}**")
+    probabilitas_df = pd.DataFrame({
+        "Kategori aktivitas": model_demo_iot.classes_,
+        "Probabilitas model (%)": np.round(probabilitas_iot * 100, 1)
+    }).sort_values("Probabilitas model (%)", ascending=False)
+    st.dataframe(probabilitas_df, use_container_width=True, hide_index=True)
+
+st.subheader("B. Simulasi urutan aktivitas dalam satu sesi")
+jumlah_jendela_demo = st.slider(
+    "Jumlah jendela simulasi", min_value=10, max_value=100,
+    value=30, step=5, key="jumlah_jendela_iot_demo"
+)
+
+if st.button("▶ Buat Simulasi Sesi", key="btn_sesi_iot_demo"):
+    rng_sesi = np.random.default_rng(2026)
+    fitur_sesi = pd.DataFrame({
+        "acc_rms_m_s2": rng_sesi.uniform(0.1, 3.2, jumlah_jendela_demo),
+        "gyro_rms_deg_s": rng_sesi.uniform(2, 110, jumlah_jendela_demo),
+        "movement_ratio_pct": rng_sesi.uniform(0, 95, jumlah_jendela_demo)
+    })
+    fitur_sesi["Prediksi aktivitas"] = model_demo_iot.predict(fitur_sesi)
+    fitur_sesi.insert(0, "Jendela", np.arange(1, jumlah_jendela_demo + 1))
+    st.session_state["hasil_sesi_iot_demo"] = fitur_sesi
+
+if "hasil_sesi_iot_demo" in st.session_state:
+    hasil_sesi_iot = st.session_state["hasil_sesi_iot_demo"]
+    st.dataframe(hasil_sesi_iot, use_container_width=True, hide_index=True)
+    distribusi_sesi = (
+        hasil_sesi_iot["Prediksi aktivitas"]
+        .value_counts()
+        .rename_axis("Kategori aktivitas")
+        .to_frame("Jumlah jendela")
+    )
+    st.bar_chart(distribusi_sesi)
+    st.download_button(
+        "⬇ Unduh hasil simulasi IoT (CSV)",
+        data=hasil_sesi_iot.to_csv(index=False).encode("utf-8"),
+        file_name="simulasi_prediksi_aktivitas_wistar.csv",
+        mime="text/csv",
+        key="download_sesi_iot_demo"
+    )
+
+st.caption(
+    "Pengembangan berikutnya: ganti data sintetis dengan fitur hasil ekstraksi "
+    "MPU6050 aktual, beri label berdasarkan observasi video/protokol, lalu validasi "
+    "model pada data tikus yang tidak digunakan saat pelatihan."
+)
