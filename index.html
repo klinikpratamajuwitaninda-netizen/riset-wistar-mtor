@@ -1036,99 +1036,264 @@ function jalankanUnitTestCloudflare() {
         &bull; <b>Interpretasi:</b> ${d.ket}
       `;
     }
-      
-
-// =====================================================
-// MOBILE IOT - VIRTUAL ESP32 MPU6050 DEMONSTRATION
-// =====================================================
+  
+ // =====================================================
+ // WISTAR MOBILE IoT - FULL ANIMATED DASHBOARD
+ // VIRTUAL ESP32 + MPU6050
+ // =====================================================
 
 (function () {
+
   const $ = id => document.getElementById(id);
 
   const accCanvas = $("iotAccelerationChart");
   const gyroCanvas = $("iotGyroChart");
 
   if (!accCanvas || !gyroCanvas || typeof Chart === "undefined") {
-    console.error("Mobile IoT elements atau Chart.js tidak ditemukan.");
+    console.error("Canvas IoT atau Chart.js tidak ditemukan.");
     return;
   }
+
+  // Hentikan animasi sebelumnya jika ada
+  if (window.wistarIotTimer) {
+    clearInterval(window.wistarIotTimer);
+  }
+
+  if (window.wistarCharts) {
+    window.wistarCharts.forEach(chart => chart.destroy());
+  }
+
+  // =====================================================
+  // 1. PENYIMPANAN DATA
+  // =====================================================
+
+  const MAX_POINTS = 60;
+  const records = [];
 
   const labels = [];
   const axData = [];
   const ayData = [];
   const azData = [];
   const gyroData = [];
-  const records = [];
 
-  let count = 0;
-  let lastActive = false;
+  let sample = 0;
   let reps = 0;
+  let previousActive = false;
+  let lastRepTime = 0;
 
-  // Status simulasi
-  $("iotConnection").textContent = "CONNECTED - VIRTUAL ESP32";
+  // =====================================================
+  // 2. PENGATURAN GRAFIK
+  // =====================================================
 
-  // Grafik accelerometer
+  Chart.defaults.font.family = "Arial";
+  Chart.defaults.font.size = 11;
+
+  const commonOptions = {
+    responsive: true,
+    maintainAspectRatio: true,
+    animation: {
+      duration: 350
+    },
+    interaction: {
+      intersect: false,
+      mode: "index"
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: "top"
+      }
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Waktu pengamatan"
+        },
+        grid: {
+          display: false
+        }
+      }
+    }
+  };
+
+  // =====================================================
+  // 3. GRAFIK ACCELEROMETER X Y Z
+  // =====================================================
+
   const accChart = new Chart(accCanvas, {
+
     type: "line",
+
     data: {
-      labels,
+      labels: labels,
+
       datasets: [
-        { label: "X", data: axData, borderColor: "#2563eb", pointRadius: 0 },
-        { label: "Y", data: ayData, borderColor: "#16a34a", pointRadius: 0 },
-        { label: "Z", data: azData, borderColor: "#dc2626", pointRadius: 0 }
+        {
+          label: "Acceleration X",
+          data: axData,
+          borderColor: "#2563eb",
+          backgroundColor: "rgba(37,99,235,0.10)",
+          borderWidth: 2.5,
+          fill: true,
+          pointRadius: 0,
+          tension: 0.4
+        },
+        {
+          label: "Acceleration Y",
+          data: ayData,
+          borderColor: "#16a34a",
+          backgroundColor: "rgba(22,163,74,0.08)",
+          borderWidth: 2.5,
+          fill: true,
+          pointRadius: 0,
+          tension: 0.4
+        },
+        {
+          label: "Acceleration Z",
+          data: azData,
+          borderColor: "#dc2626",
+          backgroundColor: "rgba(220,38,38,0.08)",
+          borderWidth: 2.5,
+          fill: true,
+          pointRadius: 0,
+          tension: 0.4
+        }
       ]
     },
-    options: { responsive: true, animation: false }
+
+    options: {
+      ...commonOptions,
+      scales: {
+        ...commonOptions.scales,
+        y: {
+          title: {
+            display: true,
+            text: "Akselerasi (m/s²)"
+          }
+        }
+      }
+    }
+
   });
 
-  // Grafik gyroscope
+  // =====================================================
+  // 4. GRAFIK GYROSCOPE
+  // =====================================================
+
   const gyroChart = new Chart(gyroCanvas, {
+
     type: "line",
+
     data: {
-      labels: [],
-      datasets: [{
-        label: "Gyroscope",
-        data: gyroData,
-        borderColor: "#9333ea",
-        pointRadius: 0
-      }]
+      labels: labels,
+
+      datasets: [
+        {
+          label: "Gyroscope Magnitude",
+          data: gyroData,
+          borderColor: "#9333ea",
+          backgroundColor: "rgba(147,51,234,0.16)",
+          borderWidth: 3,
+          fill: true,
+          pointRadius: 0,
+          tension: 0.4
+        }
+      ]
     },
-    options: { responsive: true, animation: false }
+
+    options: {
+      ...commonOptions,
+      scales: {
+        ...commonOptions.scales,
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: "Kecepatan sudut (°/s)"
+          }
+        }
+      }
+    }
+
   });
 
-  // Klasifikasi aktivitas berbasis aturan
-  function predictActivity(ax, ay, az, gx, gy, gz) {
-    const magnitude = Math.sqrt(ax**2 + ay**2 + az**2);
-    const dynamic = Math.abs(magnitude - 9.80665);
-    const gyro = Math.sqrt(gx**2 + gy**2 + gz**2);
+  window.wistarCharts = [accChart, gyroChart];
 
-    if (dynamic < 0.8 && gyro < 10) return "ISTIRAHAT";
-    if (dynamic < 2.5 && gyro < 40) return "GERAKAN RINGAN";
-    if (dynamic < 5) return "AKTIF MEMANJAT";
+  // =====================================================
+  // 5. MODEL KLASIFIKASI AKTIVITAS
+  // =====================================================
+
+  function predictActivity(ax, ay, az, gx, gy, gz) {
+
+    const magnitude = Math.sqrt(
+      ax ** 2 + ay ** 2 + az ** 2
+    );
+
+    const dynamic = Math.abs(
+      magnitude - 9.80665
+    );
+
+    const gyro = Math.sqrt(
+      gx ** 2 + gy ** 2 + gz ** 2
+    );
+
+    if (dynamic < 0.8 && gyro < 10) {
+      return "ISTIRAHAT";
+    }
+
+    if (dynamic < 2.5 && gyro < 40) {
+      return "GERAKAN RINGAN";
+    }
+
+    if (dynamic < 5) {
+      return "AKTIF MEMANJAT";
+    }
+
     return "GERAKAN INTENS";
   }
 
-  // Pembaruan dashboard
+  // =====================================================
+  // 6. UPDATE SELURUH DASHBOARD
+  // =====================================================
+
   function updateDashboard(sensor) {
+
     const { ax, ay, az, gx, gy, gz } = sensor;
-    const activity = predictActivity(ax, ay, az, gx, gy, gz);
+
+    const activity = predictActivity(
+      ax, ay, az, gx, gy, gz
+    );
+
     const now = new Date();
     const time = now.toLocaleTimeString();
 
-    const gyro = Math.sqrt(gx**2 + gy**2 + gz**2);
+    const acceleration = Math.sqrt(
+      ax ** 2 + ay ** 2 + az ** 2
+    );
 
+    const gyro = Math.sqrt(
+      gx ** 2 + gy ** 2 + gz ** 2
+    );
+
+    // Angka sensor
     $("iotAx").textContent = ax.toFixed(2);
     $("iotAy").textContent = ay.toFixed(2);
     $("iotAz").textContent = az.toFixed(2);
+
     $("iotPrediction").textContent = activity;
 
+    $("iotConnection").textContent =
+      "🟢 VIRTUAL ESP32 CONNECTED";
+
+    // Grafik akselerometer
     labels.push(time);
     axData.push(ax);
     ayData.push(ay);
     azData.push(az);
     gyroData.push(gyro);
 
-    if (labels.length > 50) {
+    if (labels.length > MAX_POINTS) {
       labels.shift();
       axData.shift();
       ayData.shift();
@@ -1137,66 +1302,136 @@ function jalankanUnitTestCloudflare() {
     }
 
     accChart.update("none");
-    gyroChart.data.labels = labels;
     gyroChart.update("none");
 
-    // Deteksi kejadian gerakan demonstrasi
-    const active = activity === "AKTIF MEMANJAT" ||
-                   activity === "GERAKAN INTENS";
+    // Deteksi kejadian gerakan simulasi
+    const active =
+      activity === "AKTIF MEMANJAT" ||
+      activity === "GERAKAN INTENS";
 
-    if (active && !lastActive) reps++;
-    lastActive = active;
+    if (
+      active &&
+      !previousActive &&
+      Date.now() - lastRepTime > 1500
+    ) {
+      reps++;
+      lastRepTime = Date.now();
+    }
 
-    $("iotReps").textContent = reps + " kejadian gerak (demo)";
+    previousActive = active;
 
-    // Penyimpanan log
+    $("iotReps").textContent =
+      reps + " kejadian gerak (DEMO)";
+
+    // Status fase simulasi
+    $("iotRest").textContent =
+      active ? "FASE AKTIF" : "FASE PEMULIHAN";
+
+    // Simpan data
     records.push({
       waktu: now.toISOString(),
       tikus: $("iotRat").value,
-      ax, ay, az, gx, gy, gz, aktivitas: activity
+      kelompok: $("iotGroup").value,
+      ax, ay, az, gx, gy, gz,
+      acceleration,
+      gyro,
+      aktivitas: activity
     });
 
-    if (records.length > 1000) records.shift();
+    if (records.length > 2000) {
+      records.shift();
+    }
 
+    // Perbarui tabel
     const table = $("iotDataTable");
     table.innerHTML = "";
 
-    records.slice(-15).reverse().forEach(d => {
+    records.slice(-15).reverse().forEach(item => {
+
       const row = table.insertRow();
 
       [
-        time, d.tikus,
-        d.ax.toFixed(2),
-        d.ay.toFixed(2),
-        d.az.toFixed(2),
-        Math.sqrt(d.gx**2 + d.gy**2 + d.gz**2).toFixed(2),
-        d.aktivitas
+        new Date(item.waktu).toLocaleTimeString(),
+        item.tikus,
+        item.ax.toFixed(2),
+        item.ay.toFixed(2),
+        item.az.toFixed(2),
+        item.gyro.toFixed(2),
+        item.aktivitas
       ].forEach(value => {
         row.insertCell().textContent = value;
       });
+
     });
+
   }
 
-  // Generator data virtual ESP32
-  function simulateSensor() {
-    count++;
+  // =====================================================
+  // 7. GENERATOR SIMULASI SENSOR
+  // =====================================================
 
-    const active = Math.sin(count * 0.25) > 0;
+  function generateSensor() {
+
+    sample++;
+
+    // Siklus aktif dan pemulihan
+    const phase = sample % 40;
+
+    const active = phase < 25;
+
     const intensity = active ? 1 : 0.08;
 
+    const t = sample * 0.45;
+
+    const ax =
+      intensity * (
+        3.8 * Math.sin(t * 2.5) +
+        0.5 * Math.random()
+      );
+
+    const ay =
+      intensity * (
+        3.0 * Math.cos(t * 2.0) +
+        0.5 * Math.random()
+      );
+
+    const az =
+      9.80665 +
+      intensity * (
+        5.0 * Math.sin(t * 3.0)
+      ) +
+      0.3 * Math.random();
+
+    const gx =
+      intensity * 75 * Math.sin(t * 2.3);
+
+    const gy =
+      intensity * 65 * Math.cos(t * 2.0);
+
+    const gz =
+      intensity * 55 * Math.sin(t * 1.8);
+
     updateDashboard({
-      ax: (Math.random() - 0.5) * 5 * intensity,
-      ay: (Math.random() - 0.5) * 4 * intensity,
-      az: 9.80665 + (Math.random() - 0.5) * 7 * intensity,
-      gx: (Math.random() - 0.5) * 100 * intensity,
-      gy: (Math.random() - 0.5) * 80 * intensity,
-      gz: (Math.random() - 0.5) * 60 * intensity
+      ax, ay, az, gx, gy, gz
     });
+
   }
 
-  // Download CSV
+  // =====================================================
+  // 8. ISI GRAFIK SEJAK AWAL
+  // =====================================================
+
+  for (let i = 0; i < 30; i++) {
+    generateSensor();
+  }
+
+  // =====================================================
+  // 9. DOWNLOAD DATA CSV
+  // =====================================================
+
   window.downloadIotCSV = function () {
-    if (!records.length) {
+
+    if (records.length === 0) {
       alert("Belum ada data.");
       return;
     }
@@ -1206,27 +1441,38 @@ function jalankanUnitTestCloudflare() {
     const csv = [
       headers.join(","),
       ...records.map(row =>
-        headers.map(h => row[h]).join(",")
+        headers.map(key => row[key]).join(",")
       )
     ].join("\n");
 
-    const blob = new Blob([csv], {
-      type: "text/csv;charset=utf-8"
-    });
+    const blob = new Blob(
+      [csv],
+      { type: "text/csv;charset=utf-8" }
+    );
 
     const link = document.createElement("a");
+
     link.href = URL.createObjectURL(blob);
-    link.download = "wistar_iot_demo.csv";
+    link.download = "Wistar_Mobile_IoT_Demo.csv";
     link.click();
+
     URL.revokeObjectURL(link.href);
+
   };
 
-  // Mulai simulasi otomatis
-  simulateSensor();
+  // =====================================================
+  // 10. ANIMASI OTOMATIS SETIAP 500 MS
+  // =====================================================
 
-  window.wistarIotTimer = setInterval(simulateSensor, 500);
+  window.wistarIotTimer = setInterval(
+    generateSensor,
+    500
+  );
 
 })();
+    
+
+
 
 
   </script>
