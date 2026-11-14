@@ -817,3 +817,50 @@ Hasil morfologi, fibrosis, dan ekspresi mTOR harus dianalisis berdasarkan
 citra mikroskopis serta pengukuran laboratorium yang sebenarnya.
 Jangan menyimpulkan adanya perbedaan signifikan sebelum pengujian statistik.
 """)
+
+
+# ==============================================================================
+# IDENTIFIKASI SATU PER SATU CITRA HISTOLOGI (TIKUS 1 - TIKUS 8)
+# ==============================================================================
+from PIL import Image
+
+st.divider()
+st.header("Identifikasi Individu Histologi Otot Gastrocnemius (Tikus 1 – Tikus 8)")
+st.markdown("Pilih subjek tikus di bawah ini untuk melihat potongan citra mikroskopis individu (skala 100 µm) beserta hasil identifikasi kuantitatif dan kualitatifnya[cite: 14]:")
+
+img_hist_path = "Wistar Rat Muscle Histology Comparison.png"
+
+# Koordinat proporsional (x1, y1, x2, y2) masing-masing kotak Tikus 1-8 pada gambar
+koordinat_tikus = {
+    "Wistar_01 (Tikus 1 - Tanpa Latihan)": (0.003, 0.220, 0.248, 0.592, "Wistar_01", "Serabut atrofi kecil-sedang, ruang endomisium melebar, selaras dengan ekspresi mTOR basal (28.4%)."),
+    "Wistar_02 (Tikus 2 - Tanpa Latihan)": (0.254, 0.220, 0.498, 0.592, "Wistar_02", "Variasi ukuran serabut tidak merata dengan celah perimisium renggang akibat induksi D-galaktosa (mTOR 31.0%)."),
+    "Wistar_03 (Tikus 3 - Tanpa Latihan)": (0.003, 0.608, 0.248, 0.980, "Wistar_03", "Atrofi sarkopenia paling nyata, diameter serabut paling kecil dan jaringan ikat longgar (mTOR 26.5%)."),
+    "Wistar_04 (Tikus 4 - Tanpa Latihan)": (0.254, 0.608, 0.498, 0.980, "Wistar_04", "Serabut membulat kecil dengan degenerasi ringan pada tepi fasikulus (mTOR 30.2%)."),
+    "Wistar_05 (Tikus 5 - Latihan Resistensi 5 Minggu)": (0.504, 0.220, 0.748, 0.592, "Wistar_05", "Hipertrofi miofibril nyata, bentuk poligonal tegas dan susunan antar-serabut sangat rapat (mTOR 74.8%)."),
+    "Wistar_06 (Tikus 6 - Latihan Resistensi 5 Minggu)": (0.754, 0.220, 0.997, 0.592, "Wistar_06", "Respons hipertrofi tertinggi (Optimal Alpha), penampang CSA sangat besar dan padat (mTOR 79.5%)."),
+    "Wistar_07 (Tikus 7 - Latihan Resistensi 5 Minggu)": (0.504, 0.608, 0.748, 0.980, "Wistar_07", "Peningkatan luas penampang serabut yang seragam dengan endomisium tipis dan sehat (mTOR 71.2%)."),
+    "Wistar_08 (Tikus 8 - Latihan Resistensi 5 Minggu)": (0.754, 0.608, 0.997, 0.980, "Wistar_08", "Hipertrofi masif serabut gastrocnemius dengan nukleus perifer teratur dan integritas utuh (mTOR 77.6%).")
+}
+
+pilihan_tikus = st.selectbox("Pilih Subjek Tikus untuk Identifikasi Detail:", list(koordinat_tikus.keys()))
+x1, y1, x2, y2, id_data, deskripsi_morfologi = koordinat_tikus[pilihan_tikus]
+
+col_id1, col_id2 = st.columns([1, 1.3])
+
+with col_id1:
+    if os.path.exists(img_hist_path):
+        full_img = Image.open(img_hist_path)
+        w, h = full_img.size
+        crop_img = full_img.crop((int(x1 * w), int(y1 * h), int(x2 * w), int(y2 * h)))
+        st.image(crop_img, caption=f"Potongan Citra Individu: {pilihan_tikus}", use_container_width=True)
+    else:
+        st.warning("Unggah file 'Wistar Rat Muscle Histology Comparison.png' ke GitHub terlebih dahulu.")
+
+with col_id2:
+    baris_tikus = df[df["rat_id"] == id_data].iloc[0]
+    st.subheader(f"Profil Identifikasi: {id_data}")
+    st.markdown(f"- **Kelompok Eksperimen:** `{baris_tikus['kelompok']}`")
+    st.markdown(f"- **Kuantitatif Histologi mTOR:** **{baris_tikus['histologi_mtor_persen']}%**")
+    st.markdown(f"- **Kuantitatif Luas Penampang (CSA):** **{baris_tikus['luas_serabut_csa_um2']} µm²**")
+    st.markdown(f"- **Kualitatif Non-Histologi:** mTOR ELISA = *{baris_tikus['mtor_elisa_kualitatif']}* | Kekuatan Otot = *{baris_tikus['kekuatan_otot_kualitatif']}* | Endurance & VO2 Max = *{baris_tikus['endurance_vo2max_kualitatif']}*")
+    st.info(f"**Identifikasi Morfologi Mikroskopis:**\n{deskripsi_morfologi}")
