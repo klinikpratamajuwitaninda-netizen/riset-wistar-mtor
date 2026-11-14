@@ -579,3 +579,241 @@ with col_vid2:
         "- **Mekanisme Beban:** Tali dari *harness* punggung tikus ditarik melalui katrol bawah menuju katrol atas yang terhubung dengan beban pemberat.\n"
         "- **Target Fisiologis:** Aktivasi jalur pensinyalan **mTOR** pada otot *gastrocnemius*, peningkatan luas serabut (CSA), kekuatan otot, dan kapasitas $\\text{VO}_2\\text{ max}$."
     )
+
+
+# ==============================================================================
+# GALERI DAN ANALISIS HISTOLOGI OTOT GASTROCNEMIUS TIKUS WISTAR
+# Model Penuaan D-Galaktosa dan Resistance Training 5 Minggu
+# ==============================================================================
+import os
+
+st.divider()
+st.header("Histologi Otot Gastrocnemius Tikus Wistar")
+
+st.markdown("""
+**Model penelitian:** Penuaan induksi D-galaktosa  
+**Hewan coba:** Tikus Wistar  
+**Usia:** 8 bulan  
+**Berat badan:** 200 gram  
+**Intervensi:** Latihan resistensi moderat selama 5 minggu  
+**Pewarnaan morfologi:** Hematoksilin-Eosin (H&E)  
+**Skala pengamatan:** 100 µm
+""")
+
+# ------------------------------------------------------------------------------
+# A. GALERI CITRA HISTOLOGI
+# ------------------------------------------------------------------------------
+st.subheader("A. Perbandingan Gambaran Histologi")
+
+hist_col1, hist_col2 = st.columns([1.6, 1])
+
+with hist_col1:
+    image_path = "Wistar Rat Muscle Histology Comparison.png"
+
+    if os.path.exists(image_path):
+        st.image(
+            image_path,
+            caption=(
+                "Gambaran penampang melintang otot gastrocnemius. "
+                "Tikus 1–4: tanpa latihan resistensi moderat. "
+                "Tikus 5–8: latihan resistensi moderat selama 5 minggu."
+            ),
+            use_container_width=True
+        )
+    else:
+        st.warning(
+            "File citra histologi tidak ditemukan. "
+            "Periksa kembali nama dan lokasi file."
+        )
+
+with hist_col2:
+    st.markdown("#### Pembagian kelompok")
+    st.markdown("""
+**Kelompok 1: Tanpa latihan resistensi moderat**
+- Tikus 1
+- Tikus 2
+- Tikus 3
+- Tikus 4
+
+**Kelompok 2: Latihan resistensi moderat**
+- Tikus 5
+- Tikus 6
+- Tikus 7
+- Tikus 8
+
+Durasi intervensi: **5 minggu**
+""")
+
+st.caption(
+    "Catatan: Citra yang dihasilkan secara AI merupakan ilustrasi visual, "
+    "bukan hasil pemeriksaan mikroskopis atau data eksperimen aktual."
+)
+
+# ------------------------------------------------------------------------------
+# B. PARAMETER KUALITATIF HISTOLOGI
+# ------------------------------------------------------------------------------
+st.divider()
+st.subheader("B. Parameter Kualitatif Histologi")
+
+st.markdown("""
+Pengamatan kualitatif dilakukan untuk menilai perubahan struktur dan
+integritas jaringan otot gastrocnemius pada model penuaan serta respons
+jaringan terhadap latihan resistensi moderat.
+""")
+
+st.markdown("""
+| No. | Parameter | Kriteria pengamatan |
+|---|---|---|
+| 1 | Morfologi serabut otot | Bentuk poligonal, keteraturan susunan, dan integritas serabut |
+| 2 | Ukuran serabut otot | Keseragaman atau variasi ukuran serabut, serta indikasi atrofi atau hipertrofi |
+| 3 | Ruang endomisium | Kondisi jaringan ikat yang mengelilingi setiap serabut otot |
+| 4 | Jaringan perimisium | Kondisi jaringan ikat yang membatasi kelompok serabut otot |
+| 5 | Posisi nukleus | Posisi nukleus perifer atau sentral pada serabut otot |
+| 6 | Degenerasi serabut | Perubahan struktur, fragmentasi, atau kerusakan serabut otot |
+| 7 | Nekrosis | Adanya serabut otot yang mengalami kematian jaringan |
+| 8 | Infiltrasi sel inflamasi | Keberadaan dan distribusi sel inflamasi di antara serabut otot |
+| 9 | Regenerasi serabut | Gambaran serabut yang menunjukkan proses regenerasi jaringan |
+""")
+
+with st.expander("Kriteria deskripsi tingkat kerusakan jaringan"):
+    st.markdown("""
+Penilaian dapat menggunakan kategori deskriptif berikut:
+
+- **Normal:** Struktur serabut teratur dan tidak ditemukan kelainan bermakna.
+- **Ringan:** Perubahan morfologi terbatas pada sebagian kecil jaringan.
+- **Sedang:** Perubahan morfologi lebih jelas dan melibatkan beberapa area jaringan.
+- **Berat:** Kerusakan atau perubahan struktur melibatkan area jaringan yang luas.
+
+Kategori harus dilengkapi definisi operasional dan ambang penilaian
+sebelum digunakan dalam analisis statistik.
+""")
+
+# ------------------------------------------------------------------------------
+# C. PARAMETER KUANTITATIF HISTOLOGI
+# ------------------------------------------------------------------------------
+st.divider()
+st.subheader("C. Parameter Kuantitatif Histologi")
+
+st.markdown("""
+Analisis kuantitatif dilakukan menggunakan pengukuran citra mikroskopis
+yang telah dikalibrasi. Pengukuran dapat dilakukan menggunakan
+**ImageJ/Fiji**.
+""")
+
+st.markdown("""
+| No. | Parameter | Satuan | Tujuan pengukuran |
+|---|---|---|---|
+| 1 | Cross-Sectional Area (CSA) | µm² | Mengukur luas penampang melintang setiap serabut otot |
+| 2 | Minimum Feret Diameter | µm | Mengukur diameter minimum serabut otot secara lebih objektif |
+| 3 | Rata-rata diameter serabut | µm | Menilai perubahan ukuran serabut otot |
+| 4 | Variasi ukuran serabut (CV-CSA) | % | Menilai keseragaman ukuran serabut |
+| 5 | Kepadatan serabut otot | Serabut/mm² | Mengukur jumlah serabut dalam luas jaringan tertentu |
+| 6 | Serabut dengan nukleus sentral | % | Menilai indikasi regenerasi atau perubahan struktur serabut |
+| 7 | Serabut degenerasi/nekrosis | % | Mengukur proporsi serabut yang mengalami kerusakan |
+| 8 | Kepadatan sel inflamasi | Sel/mm² | Mengukur jumlah sel inflamasi dalam jaringan |
+| 9 | Luas jaringan ikat/fibrosis | % | Mengukur proporsi jaringan ikat terhadap total area jaringan |
+""")
+
+st.markdown("#### Metode dan pewarnaan yang digunakan")
+
+st.markdown("""
+| Pemeriksaan | Pewarnaan/metode | Parameter utama |
+|---|---|---|
+| Morfologi otot | H&E | Bentuk serabut, CSA, diameter, nukleus, degenerasi dan inflamasi |
+| Fibrosis otot | Masson's Trichrome atau Sirius Red | Persentase area kolagen |
+| Ekspresi mTOR | Imunohistokimia (IHC) | Persentase sel/serabut positif dan intensitas pewarnaan |
+| Aktivasi jalur mTOR | Western blot | Rasio p-mTOR/mTOR dan protein hilir jalur mTOR |
+""")
+
+# ------------------------------------------------------------------------------
+# D. PARAMETER KHUSUS EKSPRESI mTOR
+# ------------------------------------------------------------------------------
+st.divider()
+st.subheader("D. Analisis Ekspresi dan Aktivasi Jalur mTOR")
+
+st.markdown("""
+mTOR merupakan regulator penting dalam sintesis protein dan pertumbuhan
+otot. Analisis ekspresi mTOR perlu dilakukan secara khusus dan tidak
+dapat disimpulkan hanya berdasarkan gambaran pewarnaan H&E.
+""")
+
+st.markdown("""
+| Parameter | Metode | Indikator |
+|---|---|---|
+| Ekspresi mTOR | IHC | Intensitas dan persentase area/serabut positif |
+| p-mTOR | IHC atau Western blot | Aktivasi mTOR melalui fosforilasi |
+| p-S6K / S6K | Western blot | Aktivitas protein hilir jalur mTOR |
+| p-4EBP1 / 4EBP1 | Western blot | Aktivitas regulasi sintesis protein |
+""")
+
+st.info("""
+**Interpretasi biologis:** Perubahan CSA dan diameter serabut dapat
+digunakan untuk mengevaluasi adaptasi morfologi otot. Sementara itu,
+p-mTOR dan protein hilirnya digunakan untuk mengevaluasi aktivitas jalur
+pensinyalan yang berkaitan dengan sintesis protein otot.
+""")
+
+# ------------------------------------------------------------------------------
+# E. PERBANDINGAN ANTARKELOMPOK
+# ------------------------------------------------------------------------------
+st.divider()
+st.subheader("E. Fokus Perbandingan Antar Kelompok")
+
+comparison_col1, comparison_col2 = st.columns(2)
+
+with comparison_col1:
+    st.markdown("#### Tanpa latihan resistensi moderat")
+    st.markdown("""
+Parameter yang diamati:
+- Luas penampang serabut (CSA).
+- Diameter serabut otot.
+- Variasi ukuran serabut.
+- Kondisi endomisium dan perimisium.
+- Degenerasi dan infiltrasi inflamasi.
+- Persentase nukleus sentral.
+""")
+
+with comparison_col2:
+    st.markdown("#### Latihan resistensi moderat 5 minggu")
+    st.markdown("""
+Parameter yang diamati:
+- Perubahan CSA dan diameter serabut.
+- Keseragaman ukuran serabut.
+- Integritas dan susunan serabut.
+- Perubahan jaringan ikat.
+- Degenerasi dan infiltrasi inflamasi.
+- Perubahan ekspresi mTOR dan p-mTOR.
+""")
+
+# ------------------------------------------------------------------------------
+# F. PANDUAN ANALISIS DATA
+# ------------------------------------------------------------------------------
+st.divider()
+st.subheader("F. Panduan Analisis dan Interpretasi")
+
+st.markdown("""
+**Analisis deskriptif:**
+- Rata-rata dan standar deviasi CSA.
+- Rata-rata diameter serabut otot.
+- Persentase serabut dengan nukleus sentral.
+- Persentase serabut yang mengalami degenerasi.
+- Persentase area fibrosis.
+
+**Analisis komparatif:**
+- Membandingkan kelompok tanpa latihan dan kelompok latihan resistensi.
+- Menguji perbedaan CSA, diameter, dan parameter histologi lainnya.
+- Menguji perbedaan ekspresi mTOR atau p-mTOR berdasarkan hasil IHC atau Western blot.
+
+**Prinsip pengambilan data:**
+- Pengamatan dilakukan pada beberapa lapang pandang yang representatif.
+- Jumlah lapang pandang dan prosedur pengambilan gambar harus seragam.
+- Setiap tikus merupakan satu unit eksperimen (n = 4 per kelompok).
+- Lapang pandang dalam satu tikus merupakan subsampel, bukan unit eksperimen independen.
+- Pengukuran dilakukan secara konsisten dan idealnya secara blinded.
+""")
+
+st.warning("""
+Hasil morfologi, fibrosis, dan ekspresi mTOR harus dianalisis berdasarkan
+citra mikroskopis serta pengukuran laboratorium yang sebenarnya.
+Jangan menyimpulkan adanya perbedaan signifikan sebelum pengujian statistik.
+""")
