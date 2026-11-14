@@ -556,6 +556,36 @@ GROUP BY kelompok;</pre>
         <b>Peringatan:</b> Hasil morfologi, fibrosis, dan ekspresi mTOR harus dianalisis berdasarkan citra mikroskopis serta pengukuran laboratorium yang sebenarnya. Jangan menyimpulkan adanya perbedaan signifikan sebelum pengujian statistik.
       </div>
     </div>
+  <!-- TAMBAHAN: IDENTIFIKASI INDIVIDU HISTOLOGI TIKUS 1 - TIKUS 8 -->
+    <div style="margin-top: 24px; padding: 20px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px;">
+      <h3 style="margin-top: 0; color: #9f1239;">Identifikasi Individu Histologi Otot Gastrocnemius (Tikus 1 &ndash; Tikus 8)</h3>
+      <p style="font-size: 14px; color: #475569;">Pilih nomor tikus untuk memfokuskan citra histologi individu (100 &mu;m) beserta parameter kuantitatif dan kualitatifnya[cite: 14]:</p>
+      
+      <select id="pilihTikusHist" onchange="tampilkanTikusHist()" style="margin-bottom: 14px; font-weight: bold;">
+        <option value="0">Tikus 1 (Wistar_01) - Tanpa Latihan Resistensi Moderat</option>
+        <option value="1">Tikus 2 (Wistar_02) - Tanpa Latihan Resistensi Moderat</option>
+        <option value="2">Tikus 3 (Wistar_03) - Tanpa Latihan Resistensi Moderat</option>
+        <option value="3">Tikus 4 (Wistar_04) - Tanpa Latihan Resistensi Moderat</option>
+        <option value="4" selected>Tikus 5 (Wistar_05) - Latihan Resistensi Moderat 5 Minggu</option>
+        <option value="5">Tikus 6 (Wistar_06) - Latihan Resistensi Moderat 5 Minggu</option>
+        <option value="6">Tikus 7 (Wistar_07) - Latihan Resistensi Moderat 5 Minggu</option>
+        <option value="7">Tikus 8 (Wistar_08) - Latihan Resistensi Moderat 5 Minggu</option>
+      </select>
+
+      <div class="grid" style="align-items: center;">
+        <div style="display: flex; justify-content: center;">
+          <!-- Bingkai Zoom Otomatis ke masing-masing kotak Tikus 1-8 -->
+          <div id="cropBoxHist" style="width: 100%; max-width: 340px; aspect-ratio: 1 / 1; border-radius: 8px; border: 2px solid #e11d48; background-image: url('Wistar Rat Muscle Histology Comparison.png'); background-size: 400% 268%; background-position: 67% 37%; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+          </div>
+        </div>
+        <div id="detailTikusHist" style="background: white; padding: 16px; border-radius: 8px; border: 1px solid #fda4af; font-size: 14px; line-height: 1.7;">
+          <h4 style="margin-top: 0; color: #9f1239;">Identifikasi Subjek: Tikus 5 (Wistar_05 - Resistance)</h4>
+          &bull; <b>Kuantitatif Histologi mTOR:</b> <b>74.8%</b><br>
+          &bull; <b>Kualitatif Non-Histologi:</b> ELISA = <i>Tinggi</i> | Kekuatan = <i>Sangat Kuat</i> | VO2 Max = <i>Sangat Baik</i><br>
+          &bull; <b>Deskripsi Mikroskopis:</b> Hipertrofi miofibril nyata, bentuk serabut poligonal tegas, diameter membesar, dan ruang endomisium antar-serabut sangat rapat.
+        </div>
+      </div>
+    </div>
   <script>
     const dataWistar = [
       { id: 'Wistar_01', group: 'Kontrol', mtor: 28.4, elisa: 'Rendah', strength: 'Normal', vo2: 'Cukup' },
@@ -718,6 +748,28 @@ function jalankanUnitTestCloudflare() {
         const waktu = new Date().toLocaleTimeString();
         banner.innerText = `[CI/CD AUTOMATED TESTING: PASS pada ${waktu}] 5/5 Unit Tests Berhasil | Akurasi R² = 98.6% | MAE = 1.85%`;
       }, 400);
+    }
+    const infoHistologiTikus = [
+      { nama: 'Tikus 1 (Wistar_01 - Kontrol)', pos: '0.5% 37%', mtor: '28.4%', elisa: 'Rendah', kuat: 'Normal', vo2: 'Cukup', desk: 'Serabut otot atrofi berukuran kecil-sedang dengan ruang endomisium melebar akibat penuaan induksi D-galaktosa.' },
+      { nama: 'Tikus 2 (Wistar_02 - Kontrol)', pos: '33.8% 37%', mtor: '31.0%', elisa: 'Rendah', kuat: 'Normal', vo2: 'Cukup', desk: 'Ukuran serabut bervariasi tidak merata disertai celah jaringan ikat perimisium yang renggang.' },
+      { nama: 'Tikus 3 (Wistar_03 - Kontrol)', pos: '0.5% 98%', mtor: '26.5%', elisa: 'Rendah', kuat: 'Lemah', vo2: 'Kurang', desk: 'Atrofi sarkopenia paling nyata, luas penampang serabut (CSA) paling kecil dan renggang.' },
+      { nama: 'Tikus 4 (Wistar_04 - Kontrol)', pos: '33.8% 98%', mtor: '30.2%', elisa: 'Sedang', kuat: 'Normal', vo2: 'Cukup', desk: 'Serabut cenderung membulat kecil dengan celah antar-serabut yang masih lebar.' },
+      { nama: 'Tikus 5 (Wistar_05 - Resistance 5 Minggu)', pos: '67.0% 37%', mtor: '74.8%', elisa: 'Tinggi', kuat: 'Sangat Kuat', vo2: 'Sangat Baik', desk: 'Hipertrofi miofibril nyata, bentuk serabut poligonal tegas, diameter membesar, dan susunan sangat rapat.' },
+      { nama: 'Tikus 6 (Wistar_06 - Resistance 5 Minggu)', pos: '99.5% 37%', mtor: '79.5%', elisa: 'Tinggi', kuat: 'Sangat Kuat', vo2: 'Sangat Baik', desk: 'Respons hipertrofi tertinggi (Optimal Responder), penampang melintang (CSA) sangat besar dan padat.' },
+      { nama: 'Tikus 7 (Wistar_07 - Resistance 5 Minggu)', pos: '67.0% 98%', mtor: '71.2%', elisa: 'Sedang', kuat: 'Kuat', vo2: 'Baik', desk: 'Peningkatan ukuran serabut otot yang seragam dengan jaringan ikat endomisium tipis dan sehat.' },
+      { nama: 'Tikus 8 (Wistar_08 - Resistance 5 Minggu)', pos: '99.5% 98%', mtor: '77.6%', elisa: 'Tinggi', kuat: 'Sangat Kuat', vo2: 'Sangat Baik', desk: 'Hipertrofi masif serabut gastrocnemius dengan posisi nukleus perifer teratur dan integritas jaringan utuh.' }
+    ];
+
+    function tampilkanTikusHist() {
+      const idx = parseInt(document.getElementById('pilihTikusHist').value);
+      const item = infoHistologiTikus[idx];
+      document.getElementById('cropBoxHist').style.backgroundPosition = item.pos;
+      document.getElementById('detailTikusHist').innerHTML = `
+        <h4 style="margin-top: 0; color: #9f1239;">Identifikasi Subjek: ${item.nama}</h4>
+        &bull; <b>Kuantitatif Histologi mTOR:</b> <b>${item.mtor}</b>[cite: 1]<br>
+        &bull; <b>Kualitatif Non-Histologi:</b> ELISA = <i>${item.elisa}</i> | Kekuatan = <i>${item.kuat}</i> | VO2 Max = <i>${item.vo2}</i>[cite: 1]<br>
+        &bull; <b>Deskripsi Mikroskopis:</b> ${item.desk}
+      `;
     }
   </script>
 </body>
