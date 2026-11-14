@@ -1476,3 +1476,25 @@ def jalankan_model_prediksi(df_input):
 # Jalankan model prediksi otomatis pada dataframe utama jika ada
 if 'df' in locals() and not df.empty:
     df = jalankan_model_prediksi(df)
+
+# =========================================================
+# MODEL PREDIKSI AKTIVITAS TIKUS WISTAR (TAMBAHAN DI BAWAH)
+# =========================================================
+def jalankan_model_prediksi(df_input):
+    df_input = df_input.copy()
+    hasil_prediksi = []
+    for _, row in df_input.iterrows():
+        mag = row.get("dynamic_acceleration", 0)
+        if mag > 3.0:
+            status = "High Intensity (Aktivitas Tinggi)"
+        elif mag > 1.5:
+            status = "Moderate Intensity (Normal)"
+        else:
+            status = "Low Intensity (Istirahat / Sedenter)"
+        hasil_prediksi.append(status)
+    df_input["status_prediksi_ml"] = hasil_prediksi
+    return df_input
+
+# Jalankan otomatis jika ada data simulasi aktif
+if 'df' in locals() and not df.empty:
+    df = jalankan_model_prediksi(df)
