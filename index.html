@@ -147,6 +147,47 @@
     }
 }
 
+ 
+/* SMOOTH NAVIGATION */
+html {
+    scroll-behavior: smooth;
+}
+
+section[id],
+select[id],
+div[id] {
+    scroll-margin-top: 100px;
+}
+
+/* ANIMASI KARTU DASHBOARD */
+.ml-box {
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.ml-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(37,99,235,.14);
+}
+
+/* ANIMASI HEADER */
+header {
+    background: linear-gradient(
+        120deg,
+        #0f172a,
+        #1e40af,
+        #2563eb,
+        #6d28d9
+    );
+    background-size: 300% 300%;
+    animation: headerMove 10s ease infinite;
+}
+
+@keyframes headerMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
   </style>
 </head>
   <body>
