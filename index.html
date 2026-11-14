@@ -707,7 +707,129 @@ GROUP BY kelompok;</pre>
         <b>Ringkasan Deskriptif IHC:</b> Rata-rata H-score kelompok <b>Resistance training (180.80 &plusmn; 20.91)</b> lebih tinggi sebesar <b>+143.00 poin</b> dibandingkan kelompok <b>Kontrol (37.80 &plusmn; 2.33)</b>.
       </div>
     </div>
-  <script>
+ 
+<!-- =====================================================
+     MOBILE IOT DASHBOARD TIKUS WISTAR
+===================================================== -->
+
+<section id="mobileIot" class="container">
+
+  <h2>📡 Mobile IoT & AI Resistance Training Monitor</h2>
+
+  <p>Monitoring gerakan tikus Wistar menggunakan ESP32 dan MPU6050.</p>
+
+  <div class="grid">
+    <div>
+      <label><b>ID Tikus</b></label>
+      <select id="iotRat">
+        <option>Wistar_01</option>
+        <option>Wistar_02</option>
+        <option>Wistar_03</option>
+        <option>Wistar_04</option>
+        <option>Wistar_05</option>
+        <option>Wistar_06</option>
+        <option>Wistar_07</option>
+        <option>Wistar_08</option>
+      </select>
+    </div>
+
+    <div>
+      <label><b>Kelompok</b></label>
+      <select id="iotGroup">
+        <option>Kontrol</option>
+        <option>Resistance Training</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="ml-box">
+      <h3>Status ESP32</h3>
+      <div class="result" id="iotConnection">Mode simulasi</div>
+    </div>
+
+    <div class="ml-box">
+      <h3>Prediksi Aktivitas</h3>
+      <div class="result" id="iotPrediction">Menunggu data</div>
+    </div>
+  </div>
+
+  <h3>1. Data Accelerometer</h3>
+
+  <div class="grid">
+    <div class="ml-box">
+      <b>Sumbu X</b>
+      <div class="result" id="iotAx">0.00</div>
+    </div>
+    <div class="ml-box">
+      <b>Sumbu Y</b>
+      <div class="result" id="iotAy">0.00</div>
+    </div>
+    <div class="ml-box">
+      <b>Sumbu Z</b>
+      <div class="result" id="iotAz">0.00</div>
+    </div>
+  </div>
+
+  <h3>2. Grafik Pergerakan Sensor</h3>
+  <div class="ml-box">
+    <canvas id="iotAccelerationChart"></canvas>
+  </div>
+
+  <h3>3. Grafik Gyroscope</h3>
+  <div class="ml-box">
+    <canvas id="iotGyroChart"></canvas>
+  </div>
+
+  <h3>4. Protokol Resistance Training</h3>
+
+  <div class="grid">
+    <div class="ml-box">
+      <b>Deteksi Pendakian</b>
+      <div class="result" id="iotReps">0 / 10</div>
+    </div>
+
+    <div class="ml-box">
+      <b>Waktu Istirahat</b>
+      <div class="result" id="iotRest">00:00</div>
+      <p>Target interval 2 menit</p>
+    </div>
+  </div>
+
+  <h3>5. Riwayat Data Sensor</h3>
+
+  <div style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>Waktu</th>
+          <th>ID Tikus</th>
+          <th>Ax</th>
+          <th>Ay</th>
+          <th>Az</th>
+          <th>Gyroscope</th>
+          <th>Aktivitas</th>
+        </tr>
+      </thead>
+      <tbody id="iotDataTable">
+        <tr><td colspan="7">Belum ada data</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button onclick="downloadIotCSV()">
+    Download Data Sensor CSV
+  </button>
+
+  <p style="font-size:12px;color:#64748b;">
+    Data simulasi bukan hasil pengukuran aktual.
+  </p>
+
+</section>
+
+<!-- AKHIR MOBILE IOT DASHBOARD -->
+
+    <script>
     const dataWistar = [
       { id: 'Wistar_01', group: 'Kontrol', mtor: 28.4, elisa: 'Rendah', strength: 'Normal', vo2: 'Cukup' },
       { id: 'Wistar_02', group: 'Kontrol', mtor: 31.0, elisa: 'Rendah', strength: 'Normal', vo2: 'Cukup' },
