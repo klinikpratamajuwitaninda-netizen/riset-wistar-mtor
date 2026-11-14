@@ -1472,3 +1472,7 @@ def jalankan_model_prediksi(df_input):
         hasil_prediksi.append(status)
     df_input["status_prediksi_ml"] = hasil_prediksi
     return df_input
+
+# Jalankan model prediksi otomatis pada dataframe utama jika ada
+if 'df' in locals() and not df.empty:
+    df = jalankan_model_prediksi(df)
