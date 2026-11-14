@@ -1453,3 +1453,22 @@ Catatan validitas:
 6. Unit eksperimen adalah tikus (n=4 per kelompok), bukan jumlah lapang pandang.
 7. H-score dan IRS merupakan metode skoring alternatif; keduanya tidak boleh dianggap sebagai hasil yang independen.
 """)
+
+
+# =========================================================
+# MODEL PREDIKSI AKTIVITAS TIKUS WISTAR
+# =========================================================
+def jalankan_model_prediksi(df_input):
+    df_input = df_input.copy()
+    hasil_prediksi = []
+    for _, row in df_input.iterrows():
+        mag = row.get("dynamic_acceleration", 0)
+        if mag > 3.0:
+            status = "High Intensity (Aktivitas Tinggi)"
+        elif mag > 1.5:
+            status = "Moderate Intensity (Normal)"
+        else:
+            status = "Low Intensity (Istirahat / Sedenter)"
+        hasil_prediksi.append(status)
+    df_input["status_prediksi_ml"] = hasil_prediksi
+    return df_input
