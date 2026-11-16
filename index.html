@@ -1529,7 +1529,174 @@ function jalankanUnitTestCloudflare() {
     },900);
 
 })();
- 
+ /* =====================================
+   ANIMATED WISTAR RAT TRACKING DEMO
+===================================== */
+
+(function(){
+
+  const canvas = document.getElementById(
+    "wistarRatAnimation"
+  );
+
+  if(!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+
+  let x = 450;
+  let y = 175;
+  let angle = 0;
+  let path = [];
+
+  function drawRat(x,y,angle){
+
+    ctx.save();
+
+    ctx.translate(x,y);
+    ctx.rotate(angle);
+
+    // Ekor
+    ctx.beginPath();
+    ctx.moveTo(-25,0);
+    ctx.quadraticCurveTo(-65,-35,-95,5);
+    ctx.strokeStyle="#f9a8a8";
+    ctx.lineWidth=4;
+    ctx.stroke();
+
+    // Badan
+    ctx.beginPath();
+    ctx.ellipse(0,0,35,22,0,0,Math.PI*2);
+    ctx.fillStyle="#d6c5b5";
+    ctx.fill();
+
+    // Kepala
+    ctx.beginPath();
+    ctx.arc(32,0,17,0,Math.PI*2);
+    ctx.fillStyle="#ead9c9";
+    ctx.fill();
+
+    // Telinga
+    ctx.fillStyle="#f9a8a8";
+
+    ctx.beginPath();
+    ctx.arc(24,-14,7,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(24,14,7,0,Math.PI*2);
+    ctx.fill();
+
+    // Mata
+    ctx.fillStyle="#111827";
+    ctx.beginPath();
+    ctx.arc(40,-5,2.5,0,Math.PI*2);
+    ctx.fill();
+
+    // Hidung
+    ctx.fillStyle="#fb7185";
+    ctx.beginPath();
+    ctx.arc(49,0,3,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function animate(){
+
+    ctx.clearRect(
+      0,0,canvas.width,canvas.height
+    );
+
+    // Arena
+    ctx.strokeStyle="#38bdf8";
+    ctx.lineWidth=3;
+
+    ctx.strokeRect(
+      25,25,850,300
+    );
+
+    // Grid arena
+    ctx.strokeStyle="rgba(148,163,184,.12)";
+    ctx.lineWidth=1;
+
+    for(let i=1;i<8;i++){
+      ctx.beginPath();
+      ctx.moveTo(25+i*106,25);
+      ctx.lineTo(25+i*106,325);
+      ctx.stroke();
+    }
+
+    // Gerakan tikus demo
+    angle += 0.025;
+
+    x += Math.sin(angle*1.7)*3;
+    y += Math.cos(angle*1.3)*2;
+
+    x=Math.max(110,Math.min(790,x));
+    y=Math.max(90,Math.min(260,y));
+
+    path.push({x,y});
+
+    if(path.length>180){
+      path.shift();
+    }
+
+    // Trajectory
+    ctx.beginPath();
+
+    path.forEach((p,i)=>{
+      if(i===0){
+        ctx.moveTo(p.x,p.y);
+      }else{
+        ctx.lineTo(p.x,p.y);
+      }
+    });
+
+    ctx.strokeStyle="#22d3ee";
+    ctx.lineWidth=3;
+    ctx.stroke();
+
+    // Rat
+    drawRat(x,y,Math.sin(angle)*0.25);
+
+    // Centroid marker
+    ctx.beginPath();
+    ctx.arc(x,y,7,0,Math.PI*2);
+    ctx.fillStyle="#facc15";
+    ctx.fill();
+
+    ctx.strokeStyle="#facc15";
+    ctx.lineWidth=2;
+    ctx.stroke();
+
+    // Tracking label
+    ctx.fillStyle="#67e8f9";
+    ctx.font="bold 15px Arial";
+
+    ctx.fillText(
+      "AI CENTROID TRACKING",
+      40,55
+    );
+
+    ctx.fillStyle="#ffffff";
+    ctx.font="13px Arial";
+
+    ctx.fillText(
+      "X: "+Math.round(x)+" px",
+      40,80
+    );
+
+    ctx.fillText(
+      "Y: "+Math.round(y)+" px",
+      40,100
+    );
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+
+})();
 
 
   </script>
