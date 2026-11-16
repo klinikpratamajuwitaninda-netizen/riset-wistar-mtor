@@ -908,29 +908,42 @@ GROUP BY kelompok;</pre>
 
   <!-- VIDEO DEMONSTRASI -->
   <div style="background:#102b46;padding:16px;border-radius:12px;">
-    <h3>1. Video Demonstrasi Pergerakan Tikus Wistar</h3>
+    <!-- 1. LIVE SIMULASI DEEPLABCUT & KINEMATIKA WISTAR -->
+  <div style="background:#102b46; padding:18px; border-radius:12px; border:1px solid #0e7490; margin-bottom:20px;">
+    <h3 style="color:#67e8f9; margin-top:0;">1. Live Telemetri &amp; DeepLabCut Pose Estimation Wistar</h3>
+    <p style="font-size:12px; color:#a5c5df;">Simulasi *real-time* pelacakan sendi tubuh, titik berat (*centroid*), dan heatmap perilaku subjek.</p>
 
-    <video
-      id="wistarDemoVideo"
-      controls
-      autoplay
-      muted
-      loop
-      playsinline
-      style="
-        width:100%;
-        max-height:520px;
-        object-fit:contain;
-        background:#000;
-        border-radius:10px;
-      ">
-      <source src="Wistar_Rat_AI_Demo.mp4" type="video/mp4">
-      Browser tidak mendukung video.
-    </video>
+    <!-- Grid Animasi Canvas (DeepLabCut & Heatmap) -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:15px; margin-bottom:15px;">
+      <div style="background:#050d1a; padding:10px; border-radius:8px; border:1px solid #16415f; text-align:center;">
+        <span style="font-size:11px; color:#38bdf8; font-weight:bold;">SKELETON POSE ESTIMATION (DeepLabCut)</span>
+        <canvas id="dlcPoseCanvas" width="400" height="230" style="width:100%; height:auto; display:block; margin-top:6px;"></canvas>
+      </div>
+      <div style="background:#050d1a; padding:10px; border-radius:8px; border:1px solid #16415f; text-align:center;">
+        <span style="font-size:11px; color:#f472b6; font-weight:bold;">SPATIAL OCCUPANCY HEATMAP</span>
+        <canvas id="heatmapCanvas" width="400" height="230" style="width:100%; height:auto; display:block; margin-top:6px;"></canvas>
+      </div>
+    </div>
 
-    <p style="font-size:12px;color:#a5c5df;">
-      Demonstrasi visual sistem pemantauan berbasis kamera.
-    </p>
+    <!-- Metrik Telemetri (Locomotion Speed, Distance, Active & Resting Duration) -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px;">
+      <div style="background:#113859; padding:12px; border-radius:8px; border-left:4px solid #22d3ee;">
+        <small style="color:#94a3b8; font-size:11px;">Locomotion Speed</small>
+        <h3 id="metricSpeed" style="margin:4px 0 0 0; color:#22d3ee; font-size:16px;">5.42 cm/s</h3>
+      </div>
+      <div style="background:#113859; padding:12px; border-radius:8px; border-left:4px solid #38bdf8;">
+        <small style="color:#94a3b8; font-size:11px;">Total Distance</small>
+        <h3 id="metricDistance" style="margin:4px 0 0 0; color:#38bdf8; font-size:16px;">14.85 m</h3>
+      </div>
+      <div style="background:#113859; padding:12px; border-radius:8px; border-left:4px solid #f472b6;">
+        <small style="color:#94a3b8; font-size:11px;">Active Duration</small>
+        <h3 id="metricActive" style="margin:4px 0 0 0; color:#f472b6; font-size:16px;">03:42 m</h3>
+      </div>
+      <div style="background:#113859; padding:12px; border-radius:8px; border-left:4px solid #64748b;">
+        <small style="color:#94a3b8; font-size:11px;">Resting Duration</small>
+        <h3 id="metricRest" style="margin:4px 0 0 0; color:#cbd5e1; font-size:16px;">01:18 m</h3>
+      </div>
+    </div>
   </div>
 <!-- VIDEO BARU: SIMULASI AI MULTI-PANEL MONITORING -->
   <div style="margin-top:18px; background:#102b46; padding:16px; border-radius:12px; border: 1px solid #0e7490;">
