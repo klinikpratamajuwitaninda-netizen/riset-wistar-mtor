@@ -882,8 +882,159 @@ GROUP BY kelompok;</pre>
         <b>Ringkasan Deskriptif IHC:</b> Rata-rata H-score kelompok <b>Resistance training (180.80 &plusmn; 20.91)</b> lebih tinggi sebesar <b>+143.00 poin</b> dibandingkan kelompok <b>Kontrol (37.80 &plusmn; 2.33)</b>.
       </div>
     </div>
- 
+ <!-- ==========================================
+     WISTAR CAMERA AI VIDEO & PREDICTIVE SYSTEM
+========================================== -->
 
+<section id="mobileIot" style="
+    margin:25px auto;
+    max-width:1200px;
+    padding:22px;
+    background:#07172c;
+    color:white;
+    border-radius:18px;
+    border:1px solid #16415f;
+    box-shadow:0 12px 35px rgba(0,0,0,.2);
+">
+
+  <h2 style="color:#67e8f9;margin-top:0;">
+    WISTAR RAT – CAMERA IoT & AI PREDICTIVE MONITORING
+  </h2>
+
+  <p style="color:#b7cce0;font-size:14px;">
+    Integrated Camera Monitoring, OBS Studio, ToxTrac,
+    DeepLabCut and Artificial Intelligence.
+  </p>
+
+  <!-- VIDEO DEMONSTRASI -->
+  <div style="background:#102b46;padding:16px;border-radius:12px;">
+    <h3>1. Video Demonstrasi Pergerakan Tikus Wistar</h3>
+
+    <video
+      id="wistarDemoVideo"
+      controls
+      autoplay
+      muted
+      loop
+      playsinline
+      style="
+        width:100%;
+        max-height:520px;
+        object-fit:contain;
+        background:#000;
+        border-radius:10px;
+      ">
+      <source src="Wistar_Rat_AI_Demo.mp4" type="video/mp4">
+      Browser tidak mendukung video.
+    </video>
+
+    <p style="font-size:12px;color:#a5c5df;">
+      Demonstrasi visual sistem pemantauan berbasis kamera.
+    </p>
+  </div>
+
+  <!-- GAMBAR INFOGRAFIK -->
+  <div style="margin-top:20px;background:#102b46;padding:16px;border-radius:12px;">
+    <h3>2. Integrated Camera AI Research Workflow</h3>
+
+    <img
+      src="Wistar_Rat_AI_Monitoring_Dashboard.png"
+      alt="Wistar AI Monitoring System"
+      style="width:100%;height:auto;border-radius:10px;">
+  </div>
+
+  <!-- ALUR SISTEM -->
+  <div style="
+    margin-top:20px;
+    padding:16px;
+    background:#102b46;
+    border-radius:12px;
+  ">
+    <h3>3. AI Video Processing Pipeline</h3>
+
+    <div style="
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+      gap:10px;
+      text-align:center;
+    ">
+      <div style="padding:15px;background:#164e63;border-radius:10px;">
+        <h4>OBS STUDIO</h4>
+        <small>Camera input & recording</small>
+      </div>
+
+      <div style="padding:15px;background:#164e63;border-radius:10px;">
+        <h4>TOXTRAC</h4>
+        <small>Animal tracking & trajectory</small>
+      </div>
+
+      <div style="padding:15px;background:#164e63;border-radius:10px;">
+        <h4>DEEPLABCUT</h4>
+        <small>Pose estimation & keypoints</small>
+      </div>
+
+      <div style="padding:15px;background:#164e63;border-radius:10px;">
+        <h4>AI PREDICTIVE</h4>
+        <small>Movement analysis & prediction</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRAFIK ANIMASI -->
+  <div style="margin-top:20px;padding:16px;background:#102b46;border-radius:12px;">
+
+    <h3>4. AI Predictive Movement Speed</h3>
+    <p style="font-size:12px;color:#a5c5df;">
+      Animated movement speed and predicted activity trend.
+    </p>
+
+    <div style="height:280px;">
+      <canvas id="wistarMotionGraph"></canvas>
+    </div>
+
+  </div>
+
+  <!-- GRAFIK PREDIKSI -->
+  <div style="
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:15px;
+    margin-top:18px;
+  ">
+
+    <div style="background:#102b46;padding:15px;border-radius:12px;">
+      <h3>5. Actual vs AI Prediction</h3>
+      <div style="height:250px;">
+        <canvas id="wistarPredictionGraph"></canvas>
+      </div>
+    </div>
+
+    <div style="background:#102b46;padding:15px;border-radius:12px;">
+      <h3>6. Behavioral Classification</h3>
+      <div style="height:250px;">
+        <canvas id="wistarBehaviorGraph"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="
+    margin-top:18px;
+    background:#123c4d;
+    border:1px solid #0e7490;
+    padding:14px;
+    border-radius:10px;
+    font-size:12px;
+    color:#c8e8f5;
+  ">
+    <b>Research Note:</b> Grafik prediktif saat ini merupakan simulasi
+    untuk demonstrasi. Data aktual harus diperoleh dari pemrosesan video
+    menggunakan ToxTrac dan DeepLabCut.
+  </div>
+
+</section>
+
+<!-- AKHIR WISTAR CAMERA AI -->
 
     <script>
     const dataWistar = [
