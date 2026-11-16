@@ -1738,107 +1738,221 @@ function jalankanUnitTestCloudflare() {
 /* ========================================================
        SCRIPT TAMBAHAN: DEEPLABCUT, HEATMAP & TELEMETRI METRICS
     ========================================================= */
-    (function(){
-      // 1. Animasi DeepLabCut Pose Estimation Skeleton
-      const dlcCanvas = document.getElementById("dlcPoseCanvas");
-      if(!dlcCanvas) return;
-      const dlcCtx = dlcCanvas.getContext("2d");
+  /* ==========================================
+   WISTAR AI - LIVE SKELETON & HEATMAP
+========================================== */
 
-      let t = 0;
-      function animateDLC() {
-        dlcCtx.clearRect(0, 0, dlcCanvas.width, dlcCanvas.height);
+(function () {
 
-        // Background Grid Arena
-        dlcCtx.strokeStyle = "rgba(56, 189, 248, 0.08)";
-        dlcCtx.lineWidth = 1;
-        for(let i=0; i<dlcCanvas.width; i+=25) {
-          dlcCtx.beginPath(); dlcCtx.moveTo(i,0); dlcCtx.lineTo(i, dlcCanvas.height); dlcCtx.stroke();
-        }
-        for(let j=0; j<dlcCanvas.height; j+=25) {
-          dlcCtx.beginPath(); dlcCtx.moveTo(0,j); dlcCtx.lineTo(dlcCanvas.width, j); dlcCtx.stroke();
-        }
+  const dlc = document.getElementById("dlcPoseCanvas");
+  const heat = document.getElementById("heatmapCanvas");
 
-        t += 0.035;
-        let cx = 200 + Math.sin(t) * 80;
-        let cy = 115 + Math.cos(t * 0.7) * 35;
+  if (!dlc || !heat) return;
 
-        let snout = {x: cx + 40, y: cy};
-        let earL = {x: cx + 22, y: cy - 10};
-        let earR = {x: cx + 22, y: cy + 10};
-        let neck = {x: cx + 12, y: cy};
-        let hip  = {x: cx - 22, y: cy};
-        let tail = {x: cx - 55, y: cy + Math.sin(t*2)*8};
+  const ctx = dlc.getContext("2d");
+  const hctx = heat.getContext("2d");
 
-        // Garis Kerangka (Skeleton)
-        dlcCtx.strokeStyle = "#38bdf8";
-        dlcCtx.lineWidth = 2;
-        dlcCtx.beginPath();
-        dlcCtx.moveTo(snout.x, snout.y); dlcCtx.lineTo(neck.x, neck.y);
-        dlcCtx.moveTo(neck.x, neck.y); dlcCtx.lineTo(hip.x, hip.y);
-        dlcCtx.moveTo(hip.x, hip.y); dlcCtx.lineTo(tail.x, tail.y);
-        dlcCtx.moveTo(neck.x, neck.y); dlcCtx.lineTo(earL.x, earL.y);
-        dlcCtx.moveTo(neck.x, neck.y); dlcCtx.lineTo(earR.x, earR.y);
-        dlcCtx.stroke();
+  let t = 0;
+  let hx = 200;
+  let hy = 115;
+  let trail = [];
 
-        // Titik Sendi (Keypoints)
-        [snout, earL, earR, neck, hip, tail].forEach((pt, idx) => {
-          dlcCtx.beginPath();
-          dlcCtx.arc(pt.x, pt.y, idx === 3 ? 5 : 3.5, 0, Math.PI * 2);
-          dlcCtx.fillStyle = idx === 3 ? "#facc15" : "#22d3ee";
-          dlcCtx.fill();
-        });
+  // SKELETON ANIMATION
+  function drawSkeleton() {
 
-        requestAnimationFrame(animateDLC);
-      }
-      animateDLC();
+    const w = dlc.width;
+    const h = dlc.height;
 
-      // 2. Simulasi Heatmap Spasial Kandang
-      const hmCanvas = document.getElementById("heatmapCanvas");
-      if(hmCanvas) {
-        const hmCtx = hmCanvas.getContext("2d");
-        let hmt = 0;
-        function drawHeatmap() {
-          hmCtx.clearRect(0,0, hmCanvas.width, hmCanvas.height);
-          hmt += 0.02;
+    ctx.clearRect(0, 0, w, h);
 
-          let grad1 = hmCtx.createRadialGradient(
-            130 + Math.sin(hmt)*50, 110 + Math.cos(hmt*0.8)*30, 8,
-            130 + Math.sin(hmt)*50, 110 + Math.cos(hmt*0.8)*30, 80
-          );
-          grad1.addColorStop(0, "rgba(239, 68, 68, 0.85)");
-          grad1.addColorStop(0.5, "rgba(234, 179, 8, 0.4)");
-          grad1.addColorStop(1, "transparent");
+    // Background
+    ctx.fillStyle = "#050d1a";
+    ctx.fillRect(0, 0, w, h);
 
-          hmCtx.fillStyle = grad1;
-          hmCtx.fillRect(0, 0, hmCanvas.width, hmCanvas.height);
+    // Grid
+    ctx.strokeStyle = "rgba(56,189,248,.12)";
+    ctx.lineWidth = 1;
 
-          requestAnimationFrame(drawHeatmap);
-        }
-        drawHeatmap();
-      }
+    for (let x = 0; x < w; x += 25) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
+      ctx.stroke();
+    }
 
-      // 3. Counter Real-Time Telemetri (Speed, Distance, Active & Resting)
-      let dist = 14.85;
-      let activeSec = 222;
-      let restSec = 78;
+    t += 0.035;
 
-      setInterval(() => {
-        dist += 0.03;
-        activeSec += 1;
-        let speed = (3.5 + Math.random() * 3.5).toFixed(2);
+    const cx = 200 + Math.sin(t) * 85;
+    const cy = 115 + Math.cos(t * 0.7) * 35;
 
-        document.getElementById("metricSpeed").innerText = speed + " cm/s";
-        document.getElementById("metricDistance").innerText = dist.toFixed(2) + " m";
+    // Body keypoints
+    const p = {
+      nose: [cx + 65, cy],
+      head: [cx + 40, cy],
+      ear1: [cx + 30, cy - 20],
+      ear2: [cx + 30, cy + 20],
+      neck: [cx + 15, cy],
+      shoulder: [cx, cy],
+      spine: [cx - 20, cy],
+      hip: [cx - 45, cy],
+      leg1: [cx - 5, cy + 28],
+      leg2: [cx - 35, cy + 28],
+      tail: [cx - 85, cy + Math.sin(t * 2) * 15]
+    };
 
-        let mActive = Math.floor(activeSec / 60).toString().padStart(2, '0');
-        let sActive = (activeSec % 60).toString().padStart(2, '0');
-        document.getElementById("metricActive").innerText = `${mActive}:${sActive} m`;
+    // Skeleton connections
+    const bones = [
+      ["nose","head"],
+      ["head","neck"],
+      ["ear1","head"],
+      ["ear2","head"],
+      ["neck","shoulder"],
+      ["shoulder","spine"],
+      ["spine","hip"],
+      ["hip","leg1"],
+      ["spine","leg2"],
+      ["hip","tail"]
+    ];
 
-        let mRest = Math.floor(restSec / 60).toString().padStart(2, '0');
-        let sRest = (restSec % 60).toString().padStart(2, '0');
-        document.getElementById("metricRest").innerText = `${mRest}:${sRest} m`;
-      }, 1000);
-    })();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "#22d3ee";
+
+    bones.forEach(([a,b]) => {
+      ctx.beginPath();
+      ctx.moveTo(...p[a]);
+      ctx.lineTo(...p[b]);
+      ctx.stroke();
+    });
+
+    // Keypoints
+    Object.entries(p).forEach(([name,point]) => {
+
+      ctx.beginPath();
+      ctx.arc(point[0],point[1],5,0,Math.PI*2);
+
+      ctx.fillStyle =
+        name === "nose" ? "#f472b6" :
+        name === "hip" ? "#a78bfa" :
+        "#22d3ee";
+
+      ctx.fill();
+
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+
+    // Centroid
+    ctx.beginPath();
+    ctx.arc(cx,cy,7,0,Math.PI*2);
+    ctx.fillStyle = "#facc15";
+    ctx.fill();
+
+    ctx.fillStyle = "#67e8f9";
+    ctx.font = "bold 12px Arial";
+    ctx.fillText("DEMO POSE TRACKING",12,18);
+
+    requestAnimationFrame(drawSkeleton);
+  }
+
+  // SPATIAL OCCUPANCY HEATMAP
+  function drawHeatmap() {
+
+    hctx.clearRect(0,0,heat.width,heat.height);
+
+    hctx.fillStyle = "#050d1a";
+    hctx.fillRect(0,0,heat.width,heat.height);
+
+    // Arena boundary
+    hctx.strokeStyle = "#16415f";
+    hctx.lineWidth = 2;
+    hctx.strokeRect(8,8,384,214);
+
+    // Moving trajectory
+    t += 0.025;
+
+    hx = 200 + Math.sin(t * 1.2) * 120;
+    hy = 115 + Math.cos(t * 0.9) * 65;
+
+    trail.push([hx,hy]);
+
+    if (trail.length > 180) {
+      trail.shift();
+    }
+
+    // Heatmap accumulation
+    trail.forEach((point,i) => {
+
+      const intensity = i / trail.length;
+
+      const gradient = hctx.createRadialGradient(
+        point[0],point[1],2,
+        point[0],point[1],35
+      );
+
+      gradient.addColorStop(
+        0,`rgba(255,0,0,${intensity * .35})`
+      );
+
+      gradient.addColorStop(
+        .5,`rgba(255,180,0,${intensity * .2})`
+      );
+
+      gradient.addColorStop(1,"rgba(0,0,255,0)");
+
+      hctx.fillStyle = gradient;
+      hctx.fillRect(
+        point[0]-35,
+        point[1]-35,
+        70,70
+      );
+    });
+
+    // Current centroid
+    hctx.beginPath();
+    hctx.arc(hx,hy,5,0,Math.PI*2);
+    hctx.fillStyle = "#22d3ee";
+    hctx.fill();
+
+    hctx.fillStyle = "#f472b6";
+    hctx.font = "bold 12px Arial";
+    hctx.fillText("SPATIAL OCCUPANCY DEMO",12,20);
+
+    requestAnimationFrame(drawHeatmap);
+  }
+
+  // START BOTH ANIMATIONS
+  drawSkeleton();
+  drawHeatmap();
+
+  // METRICS
+  let distance = 14.85;
+  let active = 222;
+
+  setInterval(() => {
+
+    distance += 0.02;
+    active++;
+
+    const speed = (3.5 + Math.random()*3.5).toFixed(2);
+
+    const speedEl = document.getElementById("metricSpeed");
+    const distEl = document.getElementById("metricDistance");
+    const activeEl = document.getElementById("metricActive");
+
+    if (speedEl) speedEl.textContent = speed + " cm/s";
+    if (distEl) distEl.textContent = distance.toFixed(2) + " m";
+
+    if (activeEl) {
+      activeEl.textContent =
+        String(Math.floor(active/60)).padStart(2,"0")
+        + ":" +
+        String(active%60).padStart(2,"0") + " m";
+    }
+
+  },1000);
+
+})();
 
   </script>
 </body>
