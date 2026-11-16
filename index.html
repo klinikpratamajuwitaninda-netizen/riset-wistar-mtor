@@ -1096,11 +1096,193 @@ GROUP BY kelompok;</pre>
     menggunakan ToxTrac dan DeepLabCut.
   </div>
 <!-- AKHIR WISTAR CAMERA AI -->
+<!-- ================================================================= -->
+  <!-- MODUL TAMBAHAN: 5 FITUR ANALISIS LANJUTAN AI CAMERA & PREDICTION   -->
+  <!-- ================================================================= -->
+  <div style="margin-top: 25px; padding: 20px; background: #0b2542; border: 1px solid #0e7490; border-radius: 12px;">
+    <h3 style="color: #67e8f9; margin-top: 0;">7. Advanced AI Camera &amp; Resistance Training Analytics</h3>
+    <p style="font-size: 13px; color: #bae6fd;">Modul perbandingan visual animatif, grafik kecepatan, live metrics, parameter beban, dan indeks kelelahan prediktif.</p>
+
+    <!-- 1. Animasi Tikus Kontrol vs Resistance -->
+    <div style="margin-top: 15px; background: #050d1a; padding: 14px; border-radius: 10px; border: 1px solid #16415f;">
+      <h4 style="color: #38bdf8; margin-top: 0;">1. Visual Animasi Perbandingan: Tikus Kontrol vs Resistance</h4>
+      <p style="font-size: 12px; color: #94a3b8;">Simulasi perbandingan pola pergerakan dan daya tahan subjek kelompok Kontrol dan Resistance secara berdampingan.</p>
+      <div class="grid" style="gap: 15px;">
+        <div style="text-align: center;">
+          <small style="color: #94a3b8; font-weight: bold;">KONTROL GROUP (Sedenter / Tanpa Latihan)</small>
+          <canvas id="animControlCanvas" width="400" height="180" style="width:100%; background:#07172c; border-radius:8px; margin-top:5px;"></canvas>
+        </div>
+        <div style="text-align: center;">
+          <small style="color: #f472b6; font-weight: bold;">RESISTANCE GROUP (Optimal Hypertrophy)</small>
+          <canvas id="animResistanceCanvas" width="400" height="180" style="width:100%; background:#07172c; border-radius:8px; margin-top:5px;"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Grafik Perbandingan Kecepatan & 3. Tabel Live Movement Speed -->
+    <div class="grid" style="margin-top: 20px;">
+      <div style="background: #050d1a; padding: 14px; border-radius: 10px; border: 1px solid #16415f;">
+        <h4 style="color: #38bdf8; margin-top: 0;">2. Grafik Perbandingan Kecepatan (Real-Time Trend)</h4>
+        <div style="height: 210px;">
+          <canvas id="speedComparisonChart"></canvas>
+        </div>
+      </div>
+
+      <div style="background: #050d1a; padding: 14px; border-radius: 10px; border: 1px solid #16415f;">
+        <h4 style="color: #38bdf8; margin-top: 0;">3. Tabel Live Movement Speed &amp; Status Pergerakan</h4>
+        <div style="overflow-x: auto;">
+          <table style="width:100%; font-size:12px; color:#fff; border-collapse:collapse;">
+            <thead>
+              <tr style="background:#0e7490;"><th style="padding:6px; border:1px solid #16415f;">Subjek</th><th style="padding:6px; border:1px solid #16415f;">Kelompok</th><th style="padding:6px; border:1px solid #16415f;">Kecepatan (cm/s)</th><th style="padding:6px; border:1px solid #16415f;">Status Aktif</th></tr>
+            </thead>
+            <tbody id="liveSpeedTableBody">
+              <tr><td style="padding:6px; border:1px solid #16415f;">Wistar_01</td><td style="padding:6px; border:1px solid #16415f;">Kontrol</td><td style="padding:6px; border:1px solid #16415f;" id="ls-1">3.10 cm/s</td><td style="padding:6px; border:1px solid #16415f; color:#94a3b8;">Normal</td></tr>
+              <tr><td style="padding:6px; border:1px solid #16415f;">Wistar_05</td><td style="padding:6px; border:1px solid #16415f;">Resistance</td><td style="padding:6px; border:1px solid #16415f;" id="ls-5">5.95 cm/s</td><td style="padding:6px; border:1px solid #16415f; color:#34d399;">Active Peak</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Parameter Estimasi Beban (Interactive Calculator) -->
+    <div style="margin-top: 20px; background: #050d1a; padding: 14px; border-radius: 10px; border: 1px solid #16415f;">
+      <h4 style="color: #38bdf8; margin-top: 0;">4. Parameter Estimasi Beban Latihan (*Ladder Climbing Load*)</h4>
+      <p style="font-size: 12px; color: #94a3b8;">Kalkulasi rasio beban eksternal terhadap berat badan subjek untuk menentukan target intensitas mekanis.</p>
+      <div class="ml-inputs" style="grid-template-columns: repeat(2, 1fr);">
+        <div>
+          <label style="font-size:12px; color:#bae6fd;"><b>Berat Badan Tikus (g):</b> <span id="valBbTikus">200</span> g</label>
+          <input type="range" id="inBbTikus" min="160" max="260" value="200" style="width:100%;" oninput="hitungEstimasiBeban()">
+        </div>
+        <div>
+          <label style="font-size:12px; color:#bae6fd;"><b>Beban Katrol / Eksternal (g):</b> <span id="valBebanEksternal">145</span> g</label>
+          <input type="range" id="inBebanEksternal" min="0" max="200" value="145" style="width:100%;" oninput="hitungEstimasiBeban()">
+        </div>
+      </div>
+      <div id="hasilEstimasiBeban" style="background: #07172c; padding: 10px; border-radius: 6px; border: 1px solid #0e7490; font-size: 13px; color: #67e8f9; margin-top: 8px;">
+        Rasio Beban (Load Ratio): <b>72.5% dari BB</b> | Kategori: <b>Intensitas Tinggi (Hipertrofi Optimal)</b>
+      </div>
+    </div>
+
+    <!-- 5. Tabel AI Predictive dan Fatigue Index (Paling Bawah) -->
+    <div style="margin-top: 20px; background: #050d1a; padding: 14px; border-radius: 10px; border: 1px solid #16415f;">
+      <h4 style="color: #f472b6; margin-top: 0;">5. Tabel Rekapitulasi AI Predictive &amp; Fatigue Index (N=8)</h4>
+      <p style="font-size: 12px; color: #94a3b8;">Hasil rekapitulasi akhir prediksi kecenderungan mTOR, indeks kelelahan (*Fatigue Index*), dan efektivitas latihan.</p>
+      <div style="overflow-x: auto;">
+        <table style="width:100%; font-size:12px; color:#fff; border-collapse:collapse; text-align:left;">
+          <thead>
+            <tr style="background:#be185d;">
+              <th style="padding:8px; border:1px solid #16415f;">ID Subjek</th>
+              <th style="padding:8px; border:1px solid #16415f;">Kelompok</th>
+              <th style="padding:8px; border:1px solid #16415f;">Prediksi mTOR (%)</th>
+              <th style="padding:8px; border:1px solid #16415f;">Fatigue Index (%)</th>
+              <th style="padding:8px; border:1px solid #16415f;">Evaluasi AI Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:8px; border:1px solid #16415f;">Wistar_01</td><td style="padding:8px; border:1px solid #16415f;">Kontrol</td><td style="padding:8px; border:1px solid #16415f;">28.4%</td><td style="padding:8px; border:1px solid #16415f;">68.5% (Cepat Lelah)</td><td style="padding:8px; border:1px solid #16415f; color:#94a3b8;">Basal / Atrofi Rendah</td></tr>
+            <tr><td style="padding:8px; border:1px solid #16415f;">Wistar_02</td><td style="padding:8px; border:1px solid #16415f;">Kontrol</td><td style="padding:8px; border:1px solid #16415f;">31.0%</td><td style="padding:8px; border:1px solid #16415f;">65.0% (Cepat Lelah)</td><td style="padding:8px; border:1px solid #16415f; color:#94a3b8;">Basal / Atrofi Rendah</td></tr>
+            <tr><td style="padding:8px; border:1px solid #16415f;">Wistar_03</td><td style="padding:8px; border:1px solid #16415f;">Kontrol</td><td style="padding:8px; border:1px solid #16415f;">26.5%</td><td style="padding:8px; border:1px solid #16415f;">74.2% (Sangat Cepat Lelah)</td><td style="padding:8px; border:1px solid #16415f; color:#f87171;">Risiko Sarkopenia Tinggi</td></tr>
+            <tr><td style="padding:8px; border:1px solid #16415f;">Wistar_04</td><td style="padding:8px; border:1px solid #16415f;">Kontrol</td><td style="padding:8px; border:1px solid #16415f;">30.2%</td><td style="padding:8px; border:1px solid #16415f;">66.1% (Cepat Lelah)</td><td style="padding:8px; border:1px solid #16415f; color:#94a3b8;">Basal / Atrofi Rendah</td></tr>
+            <tr style="background:rgba(190,24,93,0.15);"><td style="padding:8px; border:1px solid #16415f;"><b>Wistar_05</b></td><td style="padding:8px; border:1px solid #16415f;">Resistance</td><td style="padding:8px; border:1px solid #16415f;">74.8%</td><td style="padding:8px; border:1px solid #16415f;">21.4% (Tahan Lelah)</td><td style="padding:8px; border:1px solid #16415f; color:#34d399; font-weight:bold;">Hipertrofi Optimal</td></tr>
+            <tr style="background:rgba(190,24,93,0.15);"><td style="padding:8px; border:1px solid #16415f;"><b>Wistar_06</b></td><td style="padding:8px; border:1px solid #16415f;">Resistance</td><td style="padding:8px; border:1px solid #16415f;">79.5%</td><td style="padding:8px; border:1px solid #16415f;">18.2% (Tahan Lelah)</td><td style="padding:8px; border:1px solid #16415f; color:#34d399; font-weight:bold;">Top Responder (Strong Alpha)</td></tr>
+            <tr style="background:rgba(190,24,93,0.15);"><td style="padding:8px; border:1px solid #16415f;"><b>Wistar_07</b></td><td style="padding:8px; border:1px solid #16415f;">Resistance</td><td style="padding:8px; border:1px solid #16415f;">71.2%</td><td style="padding:8px; border:1px solid #16415f;">28.5% (Tahan Lelah)</td><td style="padding:8px; border:1px solid #16415f; color:#38bdf8; font-weight:bold;">Moderate Progress</td></tr>
+            <tr style="background:rgba(190,24,93,0.15);"><td style="padding:8px; border:1px solid #16415f;"><b>Wistar_08</b></td><td style="padding:8px; border:1px solid #16415f;">Resistance</td><td style="padding:8px; border:1px solid #16415f;">77.6%</td><td style="padding:8px; border:1px solid #16415f;">19.8% (Tahan Lelah)</td><td style="padding:8px; border:1px solid #16415f; color:#34d399; font-weight:bold;">Hipertrofi Optimal</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </section>
 </section>
 
 <!-- AKHIR WISTAR CAMERA AI -->
+/* ================================================================= */
+/* SCRIPT PENDUKUNG MODUL TAMBAHAN AI CAMERA & PREDICTION            */
+/* ================================================================= */
 
+// 1. Animasi Canvas Kontrol vs Resistance
+(function initComparisonAnimations() {
+  const cCanvas = document.getElementById('animControlCanvas');
+  const rCanvas = document.getElementById('animResistanceCanvas');
+  if(!cCanvas || !rCanvas) return;
+  const cCtx = cCanvas.getContext('2d');
+  const rCtx = rCanvas.getContext('2d');
+  let step = 0;
+
+  function drawRatSprite(ctx, x, y, color) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 24, 13, 0, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(20, 0, 10, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function loopAnim() {
+    step += 0.05;
+    // Kontrol: pergerakan lambat/pasif
+    cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+    cCtx.fillStyle = '#050d1a'; cCtx.fillRect(0, 0, cCanvas.width, cCanvas.height);
+    let cx = 80 + Math.sin(step * 0.5) * 40;
+    drawRatSprite(cCtx, cx, 90, '#94a3b8');
+    cCtx.fillStyle = '#94a3b8'; cCtx.font = '11px Arial'; cCtx.fillText("Aktivitas Rendah (Sedenter)", 15, 25);
+
+    // Resistance: pergerakan aktif/kuat
+    rCtx.clearRect(0, 0, rCanvas.width, rCanvas.height);
+    rCtx.fillStyle = '#050d1a'; rCtx.fillRect(0, 0, rCanvas.width, rCanvas.height);
+    let rx = 100 + Math.sin(step * 1.5) * 110;
+    drawRatSprite(rCtx, rx, 90, '#f472b6');
+    rCtx.fillStyle = '#f472b6'; rCtx.font = '11px Arial'; rCtx.fillText("Aktivitas Tinggi (Resistance Training)", 15, 25);
+
+    requestAnimationFrame(loopAnim);
+  }
+  loopAnim();
+})();
+
+// 2. Grafik Perbandingan Kecepatan
+(function initSpeedCompChart() {
+  const chartEl = document.getElementById('speedComparisonChart');
+  if(!chartEl) return;
+  const labels = ['0s', '10s', '20s', '30s', '40s', '50s', '60s'];
+  window.speedCompChartInstance = new Chart(chartEl, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Kontrol (cm/s)', data: [2.8, 3.1, 2.9, 3.2, 3.0, 3.1, 2.9], borderColor: '#94a3b8', tension: 0.3 },
+        { label: 'Resistance (cm/s)', data: [4.5, 5.2, 5.8, 6.1, 6.0, 6.4, 6.2], borderColor: '#22d3ee', tension: 0.3 }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, scales: { x: { ticks: { color: '#bae6fd' } }, y: { ticks: { color: '#bae6fd' }, min: 0, max: 10 } } }
+  });
+})();
+
+// 3. Update Live Movement Speed Interaktif
+setInterval(() => {
+  const l1 = document.getElementById('ls-1');
+  const l5 = document.getElementById('ls-5');
+  if(l1 && l5) {
+    l1.textContent = (2.8 + Math.random() * 0.5).toFixed(2) + ' cm/s';
+    l5.textContent = (5.8 + Math.random() * 0.8).toFixed(2) + ' cm/s';
+  }
+}, 1200);
+
+// 4. Kalkulator Parameter Estimasi Beban
+function hitungEstimasiBeban() {
+  const bb = parseFloat(document.getElementById('inBbTikus').value);
+  const beban = parseFloat(document.getElementById('inBebanEksternal').value);
+  document.getElementById('valBbTikus').innerText = bb;
+  document.getElementById('valBebanEksternal').innerText = beban;
+
+  const rasio = (beban / bb) * 100;
+  let kategori = rasio > 60 ? 'Intensitas Tinggi (Hipertrofi Optimal)' : rasio > 30 ? 'Intensitas Sedang (Moderate Training)' : 'Intensitas Ringan / Basal';
+  document.getElementById('hasilEstimasiBeban').innerHTML = `Rasio Beban (Load Ratio): <b>${rasio.toFixed(1)}% dari BB</b> | Kategori: <b>${kategori}</b>`;
+}
     <script>
     const dataWistar = [
       { id: 'Wistar_01', group: 'Kontrol', mtor: 28.4, elisa: 'Rendah', strength: 'Normal', vo2: 'Cukup' },
