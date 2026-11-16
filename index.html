@@ -1243,7 +1243,266 @@ function jalankanUnitTestCloudflare() {
         &bull; <b>Interpretasi:</b> ${d.ket}
       `;
     }
-  
+  /* ==========================================
+   WISTAR AI PREDICTIVE ANIMATED GRAPH
+========================================== */
+
+(function initWistarAI() {
+
+    if (typeof Chart === "undefined") {
+        console.error("Chart.js belum tersedia");
+        return;
+    }
+
+    const motion = document.getElementById("wistarMotionGraph");
+    const prediction = document.getElementById("wistarPredictionGraph");
+    const behavior = document.getElementById("wistarBehaviorGraph");
+
+    if (!motion || !prediction || !behavior) return;
+
+    // Hentikan grafik lama jika script dimuat ulang
+    ["wistarMotionChart","wistarPredictionChart","wistarBehaviorChart"]
+      .forEach(key => {
+        if (window[key]) window[key].destroy();
+      });
+
+    if (window.wistarPredictiveTimer) {
+        clearInterval(window.wistarPredictiveTimer);
+    }
+
+    const labels = Array.from(
+        {length:25},
+        (_,i) => `${i*5}s`
+    );
+
+    const actual = labels.map(
+        () => 3 + Math.random()*5
+    );
+
+    const predicted = actual.map(
+        (v,i) => i < 18 ? null : v*0.9
+    );
+
+    const commonOptions = {
+        responsive:true,
+        maintainAspectRatio:false,
+        animation:false,
+
+        interaction:{
+            intersect:false,
+            mode:"index"
+        },
+
+        plugins:{
+            legend:{
+                labels:{
+                    color:"#e0f2fe"
+                }
+            }
+        },
+
+        scales:{
+            x:{
+                ticks:{color:"#bae6fd"},
+                grid:{color:"rgba(148,163,184,.12)"}
+            },
+
+            y:{
+                beginAtZero:true,
+                ticks:{color:"#bae6fd"},
+                grid:{color:"rgba(148,163,184,.12)"}
+            }
+        }
+    };
+
+    // 1. MOVEMENT SPEED
+    window.wistarMotionChart = new Chart(motion,{
+        type:"line",
+
+        data:{
+            labels:labels.slice(),
+
+            datasets:[
+                {
+                    label:"Actual Movement (Demo)",
+                    data:actual.slice(),
+                    borderColor:"#22d3ee",
+                    backgroundColor:"rgba(34,211,238,.12)",
+                    fill:true,
+                    tension:.4,
+                    pointRadius:0,
+                    borderWidth:2
+                },
+                {
+                    label:"AI Trend (Demo)",
+                    data:actual.map(v=>v*.85),
+                    borderColor:"#a78bfa",
+                    borderDash:[6,4],
+                    tension:.4,
+                    pointRadius:0,
+                    borderWidth:2
+                }
+            ]
+        },
+
+        options:commonOptions
+    });
+
+    // 2. ACTUAL VS PREDICTION
+    window.wistarPredictionChart = new Chart(prediction,{
+        type:"line",
+
+        data:{
+            labels:labels.slice(),
+
+            datasets:[
+                {
+                    label:"Actual",
+                    data:actual.slice(),
+                    borderColor:"#22d3ee",
+                    tension:.4,
+                    pointRadius:0
+                },
+                {
+                    label:"Predicted",
+                    data:predicted.slice(),
+                    borderColor:"#f472b6",
+                    borderDash:[6,4],
+                    tension:.4,
+                    pointRadius:2
+                }
+            ]
+        },
+
+        options:commonOptions
+    });
+
+    // 3. BEHAVIOR CLASSIFICATION
+    window.wistarBehaviorChart = new Chart(behavior,{
+        type:"doughnut",
+
+        data:{
+            labels:[
+                "Resting",
+                "Exploration",
+                "Locomotion"
+            ],
+
+            datasets:[{
+                data:[28,52,20],
+
+                backgroundColor:[
+                    "#64748b",
+                    "#06b6d4",
+                    "#a78bfa"
+                ],
+
+                borderWidth:3,
+                borderColor:"#102b46"
+            }]
+        },
+
+        options:{
+            responsive:true,
+            maintainAspectRatio:false,
+
+            plugins:{
+                legend:{
+                    position:"bottom",
+                    labels:{
+                        color:"#e0f2fe"
+                    }
+                }
+            }
+        }
+    });
+
+    // 4. ANIMASI GRAFIK OTOMATIS
+    let counter = 0;
+
+    window.wistarPredictiveTimer = setInterval(()=>{
+
+        counter++;
+
+        const movement = Math.max(
+            0.5,
+            5 + Math.sin(counter*.35)*2.5
+            + (Math.random()-.5)*1.5
+        );
+
+        const forecast = Math.max(
+            0.5,
+            movement*.8 + Math.sin(counter*.2)
+        );
+
+        const chart = window.wistarMotionChart;
+        const pred = window.wistarPredictionChart;
+
+        const newLabel = `${counter*5+120}s`;
+
+        chart.data.labels.push(newLabel);
+
+        chart.data.datasets[0].data.push(
+            Number(movement.toFixed(2))
+        );
+
+        chart.data.datasets[1].data.push(
+            Number(forecast.toFixed(2))
+        );
+
+        pred.data.labels.push(newLabel);
+
+        pred.data.datasets[0].data.push(
+            Number(movement.toFixed(2))
+        );
+
+        pred.data.datasets[1].data.push(
+            Number(forecast.toFixed(2))
+        );
+
+        // Batasi jumlah titik grafik
+        if(chart.data.labels.length>25){
+
+            chart.data.labels.shift();
+
+            chart.data.datasets.forEach(ds=>{
+                ds.data.shift();
+            });
+
+            pred.data.labels.shift();
+
+            pred.data.datasets.forEach(ds=>{
+                ds.data.shift();
+            });
+        }
+
+        chart.update("none");
+        pred.update("none");
+
+        // Update klasifikasi demo
+        const active = Math.round(
+            15 + Math.abs(Math.sin(counter*.12))*40
+        );
+
+        const exploration = Math.round(
+            25 + Math.abs(Math.cos(counter*.09))*35
+        );
+
+        const resting = Math.max(
+            5,100-active-exploration
+        );
+
+        window.wistarBehaviorChart.data.datasets[0].data=[
+            resting,
+            exploration,
+            active
+        ];
+
+        window.wistarBehaviorChart.update("none");
+
+    },900);
+
+})();
  
 
 
