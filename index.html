@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -539,7 +539,7 @@ GROUP BY kelompok;</pre>
       <div class="grid" style="align-items: center;">
         <div>
           <video controls autoplay loop muted playsinline style="width: 100%; border-radius: 8px; border: 1px solid #94a3b8; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-            <source src="video_1.mp4" type="video/mp4">
+           <source src="ladder_climbing.mp4" type="video/mp4">
             Browser Anda tidak mendukung pemutaran video HTML5.
           </video>
         </div>
@@ -882,9 +882,407 @@ GROUP BY kelompok;</pre>
         <b>Ringkasan Deskriptif IHC:</b> Rata-rata H-score kelompok <b>Resistance training (180.80 &plusmn; 20.91)</b> lebih tinggi sebesar <b>+143.00 poin</b> dibandingkan kelompok <b>Kontrol (37.80 &plusmn; 2.33)</b>.
       </div>
     </div>
- 
+ <!-- ==========================================
+     WISTAR CAMERA AI VIDEO & PREDICTIVE SYSTEM
+========================================== -->
 
+<section id="mobileIot" style="
+    margin:25px auto;
+    max-width:1200px;
+    padding:22px;
+    background:#07172c;
+    color:white;
+    border-radius:18px;
+    border:1px solid #16415f;
+    box-shadow:0 12px 35px rgba(0,0,0,.2);
+">
 
+  <h2 style="color:#67e8f9;margin-top:0;">
+    WISTAR RAT – CAMERA IoT & AI PREDICTIVE MONITORING
+  </h2>
+
+  <p style="color:#b7cce0;font-size:14px;">
+    Integrated Camera Monitoring, OBS Studio, ToxTrac,
+    DeepLabCut and Artificial Intelligence.
+  </p>
+
+  <!-- VIDEO DEMONSTRASI -->
+  <div style="background:#102b46;padding:16px;border-radius:12px;">
+    <!-- 1. LIVE SIMULASI DEEPLABCUT & KINEMATIKA WISTAR -->
+  <div style="background:#102b46; padding:18px; border-radius:12px; border:1px solid #0e7490; margin-bottom:20px;">
+    <h3 style="color:#67e8f9; margin-top:0;">1. Live Telemetri &amp; DeepLabCut Pose Estimation Wistar</h3>
+    <p style="font-size:12px; color:#a5c5df;">Simulasi *real-time* pelacakan sendi tubuh, titik berat (*centroid*), dan heatmap perilaku subjek.</p>
+
+    <!-- Grid Animasi Canvas (DeepLabCut & Heatmap) -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:15px; margin-bottom:15px;">
+      <div style="background:#050d1a; padding:10px; border-radius:8px; border:1px solid #16415f; text-align:center;">
+        <span style="font-size:11px; color:#38bdf8; font-weight:bold;">SKELETON POSE ESTIMATION (DeepLabCut)</span>
+        <canvas id="dlcPoseCanvas" width="400" height="230" style="width:100%; height:auto; display:block; margin-top:6px;"></canvas>
+      </div>
+      <div style="background:#050d1a; padding:10px; border-radius:8px; border:1px solid #16415f; text-align:center;">
+        <span style="font-size:11px; color:#f472b6; font-weight:bold;">SPATIAL OCCUPANCY HEATMAP</span>
+        <canvas id="heatmapCanvas" width="400" height="230" style="width:100%; height:auto; display:block; margin-top:6px;"></canvas>
+      </div>
+    </div>
+
+    <!-- Metrik Telemetri (Locomotion Speed, Distance, Active & Resting Duration) -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px;">
+      <div style="background:#113859; padding:12px; border-radius:8px; border-left:4px solid #22d3ee;">
+        <small style="color:#94a3b8; font-size:11px;">Locomotion Speed</small>
+        <h3 id="metricSpeed" style="margin:4px 0 0 0; color:#22d3ee; font-size:16px;">5.42 cm/s</h3>
+      </div>
+      <div style="background:#113859; padding:12px; border-radius:8px; border-left:4px solid #38bdf8;">
+        <small style="color:#94a3b8; font-size:11px;">Total Distance</small>
+        <h3 id="metricDistance" style="margin:4px 0 0 0; color:#38bdf8; font-size:16px;">14.85 m</h3>
+      </div>
+      <div style="background:#113859; padding:12px; border-radius:8px; border-left:4px solid #f472b6;">
+        <small style="color:#94a3b8; font-size:11px;">Active Duration</small>
+        <h3 id="metricActive" style="margin:4px 0 0 0; color:#f472b6; font-size:16px;">03:42 m</h3>
+      </div>
+      <div style="background:#113859; padding:12px; border-radius:8px; border-left:4px solid #64748b;">
+        <small style="color:#94a3b8; font-size:11px;">Resting Duration</small>
+        <h3 id="metricRest" style="margin:4px 0 0 0; color:#cbd5e1; font-size:16px;">01:18 m</h3>
+      </div>
+    </div>
+  </div>
+<!-- VIDEO BARU: SIMULASI AI MULTI-PANEL MONITORING -->
+  <div style="margin-top:18px; background:#102b46; padding:16px; border-radius:12px; border: 1px solid #0e7490;">
+    <h3 style="color:#67e8f9; margin-top:0;">1.b. Video Simulasi AI Multi-Panel Monitoring</h3>
+
+    <video
+      id="geminiGeneratedVideo"
+      controls
+      autoplay
+      muted
+      loop
+      playsinline
+      style="
+        width:100%;
+        max-height:520px;
+        object-fit:contain;
+        background:#000;
+        border-radius:10px;
+      ">
+      <source src="gemini_generated_video_ad292931_2.mp4" type="video/mp4">
+      Browser Anda tidak mendukung pemutaran video HTML5.
+    </video>
+
+    <p style="font-size:12px; color:#a5c5df; margin-bottom:0;">
+      Demonstrasi visual 6-panel terintegrasi (OBS Studio, ToxTrac, DeepLabCut, &amp; AI Predictive Analytics).
+    </p>
+  </div>
+  <!-- GAMBAR INFOGRAFIK -->
+  <div style="margin-top:20px;background:#102b46;padding:16px;border-radius:12px;">
+    <h3>2. Integrated Camera AI Research Workflow</h3>
+
+    <img
+      src="Wistar_Rat_AI_Monitoring_Dashboard.png"
+      alt="Wistar AI Monitoring System"
+      style="width:100%;height:auto;border-radius:10px;">
+  </div>
+
+  <!-- ALUR SISTEM -->
+  <div style="
+    margin-top:20px;
+    padding:16px;
+    background:#102b46;
+    border-radius:12px;
+  ">
+    <h3>3. AI Video Processing Pipeline</h3>
+
+    <div style="
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+      gap:10px;
+      text-align:center;
+    ">
+      <div style="padding:15px;background:#164e63;border-radius:10px;">
+        <h4>OBS STUDIO</h4>
+        <small>Camera input & recording</small>
+      </div>
+
+      <div style="padding:15px;background:#164e63;border-radius:10px;">
+        <h4>TOXTRAC</h4>
+        <small>Animal tracking & trajectory</small>
+      </div>
+
+      <div style="padding:15px;background:#164e63;border-radius:10px;">
+        <h4>DEEPLABCUT</h4>
+        <small>Pose estimation & keypoints</small>
+      </div>
+
+      <div style="padding:15px;background:#164e63;border-radius:10px;">
+        <h4>AI PREDICTIVE</h4>
+        <small>Movement analysis & prediction</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRAFIK ANIMASI -->
+  <div style="margin-top:20px;padding:16px;background:#102b46;border-radius:12px;">
+
+    <h3>4. AI Predictive Movement Speed</h3>
+    <p style="font-size:12px;color:#a5c5df;">
+      Animated movement speed and predicted activity trend.
+    </p>
+<!-- ANIMASI TRACKING TIKUS WISTAR -->
+<div style="
+  background:#07172c;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:18px;
+">
+  <h4 style="color:#67e8f9;">
+    LIVE RAT MOVEMENT TRACKING – AI DEMO
+  </h4>
+
+  <canvas id="wistarRatAnimation"
+    width="900"
+    height="350"
+    style="
+      width:100%;
+      background:#0b2542;
+      border-radius:10px;
+      display:block;
+    ">
+  </canvas>
+
+  <p style="color:#bae6fd;font-size:11px;">
+    Simulated centroid tracking, movement trajectory
+    and exploration pattern.
+  </p>
+</div>
+    <div style="height:280px;">
+      <canvas id="wistarMotionGraph"></canvas>
+    </div>
+
+  </div>
+
+  <!-- GRAFIK PREDIKSI -->
+  <div style="
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:15px;
+    margin-top:18px;
+  ">
+
+    <div style="background:#102b46;padding:15px;border-radius:12px;">
+      <h3>5. Actual vs AI Prediction</h3>
+      <div style="height:250px;">
+        <canvas id="wistarPredictionGraph"></canvas>
+      </div>
+    </div>
+
+    <div style="background:#102b46;padding:15px;border-radius:12px;">
+      <h3>6. Behavioral Classification</h3>
+      <div style="height:250px;">
+        <canvas id="wistarBehaviorGraph"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="
+    margin-top:18px;
+    background:#123c4d;
+    border:1px solid #0e7490;
+    padding:14px;
+    border-radius:10px;
+    font-size:12px;
+    color:#c8e8f5;
+  ">
+    <b>Research Note:</b> Grafik prediktif saat ini merupakan simulasi
+    untuk demonstrasi. Data aktual harus diperoleh dari pemrosesan video
+    menggunakan ToxTrac dan DeepLabCut.
+  </div>
+<!-- AKHIR WISTAR CAMERA AI -->
+<!-- ================================================================= -->
+  <!-- MODUL TAMBAHAN: 5 FITUR ANALISIS LANJUTAN AI CAMERA & PREDICTION   -->
+  <!-- ================================================================= -->
+  <div style="margin-top: 25px; padding: 20px; background: #0b2542; border: 1px solid #0e7490; border-radius: 12px;">
+    <h3 style="color: #67e8f9; margin-top: 0;">7. Advanced AI Camera &amp; Resistance Training Analytics</h3>
+    <p style="font-size: 13px; color: #bae6fd;">Modul perbandingan visual animatif, grafik kecepatan, live metrics, parameter beban, dan indeks kelelahan prediktif.</p>
+
+    <!-- 1. Animasi Tikus Kontrol vs Resistance -->
+    <div style="margin-top: 15px; background: #050d1a; padding: 14px; border-radius: 10px; border: 1px solid #16415f;">
+      <h4 style="color: #38bdf8; margin-top: 0;">1. Visual Animasi Perbandingan: Tikus Kontrol vs Resistance</h4>
+      <p style="font-size: 12px; color: #94a3b8;">Simulasi perbandingan pola pergerakan dan daya tahan subjek kelompok Kontrol dan Resistance secara berdampingan.</p>
+      <div class="grid" style="gap: 15px;">
+        <div style="text-align: center;">
+          <small style="color: #94a3b8; font-weight: bold;">KONTROL GROUP (Sedenter / Tanpa Latihan)</small>
+          <canvas id="animControlCanvas" width="400" height="180" style="width:100%; background:#07172c; border-radius:8px; margin-top:5px;"></canvas>
+        </div>
+        <div style="text-align: center;">
+          <small style="color: #f472b6; font-weight: bold;">RESISTANCE GROUP (Optimal Hypertrophy)</small>
+          <canvas id="animResistanceCanvas" width="400" height="180" style="width:100%; background:#07172c; border-radius:8px; margin-top:5px;"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Grafik Perbandingan Kecepatan & 3. Tabel Live Movement Speed -->
+    <div class="grid" style="margin-top: 20px;">
+      <div style="background: #050d1a; padding: 14px; border-radius: 10px; border: 1px solid #16415f;">
+        <h4 style="color: #38bdf8; margin-top: 0;">2. Grafik Perbandingan Kecepatan (Real-Time Trend)</h4>
+        <div style="height: 210px;">
+          <canvas id="speedComparisonChart"></canvas>
+        </div>
+      </div>
+
+      <div style="background: #050d1a; padding: 14px; border-radius: 10px; border: 1px solid #16415f;">
+        <h4 style="color: #38bdf8; margin-top: 0;">3. Tabel Live Movement Speed &amp; Status Pergerakan</h4>
+        <div style="overflow-x: auto;">
+          <table style="width:100%; font-size:12px; color:#fff; border-collapse:collapse;">
+            <thead>
+              <tr style="background:#0e7490;"><th style="padding:6px; border:1px solid #16415f;">Subjek</th><th style="padding:6px; border:1px solid #16415f;">Kelompok</th><th style="padding:6px; border:1px solid #16415f;">Kecepatan (cm/s)</th><th style="padding:6px; border:1px solid #16415f;">Status Aktif</th></tr>
+            </thead>
+            <tbody id="liveSpeedTableBody">
+              <tr><td style="padding:6px; border:1px solid #16415f;">Wistar_01</td><td style="padding:6px; border:1px solid #16415f;">Kontrol</td><td style="padding:6px; border:1px solid #16415f;" id="ls-1">3.10 cm/s</td><td style="padding:6px; border:1px solid #16415f; color:#94a3b8;">Normal</td></tr>
+              <tr><td style="padding:6px; border:1px solid #16415f;">Wistar_05</td><td style="padding:6px; border:1px solid #16415f;">Resistance</td><td style="padding:6px; border:1px solid #16415f;" id="ls-5">5.95 cm/s</td><td style="padding:6px; border:1px solid #16415f; color:#34d399;">Active Peak</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Parameter Estimasi Beban (Interactive Calculator) -->
+    <div style="margin-top: 20px; background: #050d1a; padding: 14px; border-radius: 10px; border: 1px solid #16415f;">
+      <h4 style="color: #38bdf8; margin-top: 0;">4. Parameter Estimasi Beban Latihan (*Ladder Climbing Load*)</h4>
+      <p style="font-size: 12px; color: #94a3b8;">Kalkulasi rasio beban eksternal terhadap berat badan subjek untuk menentukan target intensitas mekanis.</p>
+      <div class="ml-inputs" style="grid-template-columns: repeat(2, 1fr);">
+        <div>
+          <label style="font-size:12px; color:#bae6fd;"><b>Berat Badan Tikus (g):</b> <span id="valBbTikus">200</span> g</label>
+          <input type="range" id="inBbTikus" min="160" max="260" value="200" style="width:100%;" oninput="hitungEstimasiBeban()">
+        </div>
+        <div>
+          <label style="font-size:12px; color:#bae6fd;"><b>Beban Katrol / Eksternal (g):</b> <span id="valBebanEksternal">145</span> g</label>
+          <input type="range" id="inBebanEksternal" min="0" max="200" value="145" style="width:100%;" oninput="hitungEstimasiBeban()">
+        </div>
+      </div>
+      <div id="hasilEstimasiBeban" style="background: #07172c; padding: 10px; border-radius: 6px; border: 1px solid #0e7490; font-size: 13px; color: #67e8f9; margin-top: 8px;">
+        Rasio Beban (Load Ratio): <b>72.5% dari BB</b> | Kategori: <b>Intensitas Tinggi (Hipertrofi Optimal)</b>
+      </div>
+    </div>
+
+    <!-- 5. Tabel AI Predictive dan Fatigue Index (Paling Bawah) -->
+    <div style="margin-top: 20px; background: #050d1a; padding: 14px; border-radius: 10px; border: 1px solid #16415f;">
+      <h4 style="color: #f472b6; margin-top: 0;">5. Tabel Rekapitulasi AI Predictive &amp; Fatigue Index (N=8)</h4>
+      <p style="font-size: 12px; color: #94a3b8;">Hasil rekapitulasi akhir prediksi kecenderungan mTOR, indeks kelelahan (*Fatigue Index*), dan efektivitas latihan.</p>
+      <div style="overflow-x: auto;">
+        <table style="width:100%; font-size:12px; color:#fff; border-collapse:collapse; text-align:left;">
+          <thead>
+            <tr style="background:#be185d;">
+              <th style="padding:8px; border:1px solid #16415f;">ID Subjek</th>
+              <th style="padding:8px; border:1px solid #16415f;">Kelompok</th>
+              <th style="padding:8px; border:1px solid #16415f;">Prediksi mTOR (%)</th>
+              <th style="padding:8px; border:1px solid #16415f;">Fatigue Index (%)</th>
+              <th style="padding:8px; border:1px solid #16415f;">Evaluasi AI Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:8px; border:1px solid #16415f;">Wistar_01</td><td style="padding:8px; border:1px solid #16415f;">Kontrol</td><td style="padding:8px; border:1px solid #16415f;">28.4%</td><td style="padding:8px; border:1px solid #16415f;">68.5% (Cepat Lelah)</td><td style="padding:8px; border:1px solid #16415f; color:#94a3b8;">Basal / Atrofi Rendah</td></tr>
+            <tr><td style="padding:8px; border:1px solid #16415f;">Wistar_02</td><td style="padding:8px; border:1px solid #16415f;">Kontrol</td><td style="padding:8px; border:1px solid #16415f;">31.0%</td><td style="padding:8px; border:1px solid #16415f;">65.0% (Cepat Lelah)</td><td style="padding:8px; border:1px solid #16415f; color:#94a3b8;">Basal / Atrofi Rendah</td></tr>
+            <tr><td style="padding:8px; border:1px solid #16415f;">Wistar_03</td><td style="padding:8px; border:1px solid #16415f;">Kontrol</td><td style="padding:8px; border:1px solid #16415f;">26.5%</td><td style="padding:8px; border:1px solid #16415f;">74.2% (Sangat Cepat Lelah)</td><td style="padding:8px; border:1px solid #16415f; color:#f87171;">Risiko Sarkopenia Tinggi</td></tr>
+            <tr><td style="padding:8px; border:1px solid #16415f;">Wistar_04</td><td style="padding:8px; border:1px solid #16415f;">Kontrol</td><td style="padding:8px; border:1px solid #16415f;">30.2%</td><td style="padding:8px; border:1px solid #16415f;">66.1% (Cepat Lelah)</td><td style="padding:8px; border:1px solid #16415f; color:#94a3b8;">Basal / Atrofi Rendah</td></tr>
+            <tr style="background:rgba(190,24,93,0.15);"><td style="padding:8px; border:1px solid #16415f;"><b>Wistar_05</b></td><td style="padding:8px; border:1px solid #16415f;">Resistance</td><td style="padding:8px; border:1px solid #16415f;">74.8%</td><td style="padding:8px; border:1px solid #16415f;">21.4% (Tahan Lelah)</td><td style="padding:8px; border:1px solid #16415f; color:#34d399; font-weight:bold;">Hipertrofi Optimal</td></tr>
+            <tr style="background:rgba(190,24,93,0.15);"><td style="padding:8px; border:1px solid #16415f;"><b>Wistar_06</b></td><td style="padding:8px; border:1px solid #16415f;">Resistance</td><td style="padding:8px; border:1px solid #16415f;">79.5%</td><td style="padding:8px; border:1px solid #16415f;">18.2% (Tahan Lelah)</td><td style="padding:8px; border:1px solid #16415f; color:#34d399; font-weight:bold;">Top Responder (Strong Alpha)</td></tr>
+            <tr style="background:rgba(190,24,93,0.15);"><td style="padding:8px; border:1px solid #16415f;"><b>Wistar_07</b></td><td style="padding:8px; border:1px solid #16415f;">Resistance</td><td style="padding:8px; border:1px solid #16415f;">71.2%</td><td style="padding:8px; border:1px solid #16415f;">28.5% (Tahan Lelah)</td><td style="padding:8px; border:1px solid #16415f; color:#38bdf8; font-weight:bold;">Moderate Progress</td></tr>
+            <tr style="background:rgba(190,24,93,0.15);"><td style="padding:8px; border:1px solid #16415f;"><b>Wistar_08</b></td><td style="padding:8px; border:1px solid #16415f;">Resistance</td><td style="padding:8px; border:1px solid #16415f;">77.6%</td><td style="padding:8px; border:1px solid #16415f;">19.8% (Tahan Lelah)</td><td style="padding:8px; border:1px solid #16415f; color:#34d399; font-weight:bold;">Hipertrofi Optimal</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+</section>
+
+<!-- AKHIR WISTAR CAMERA AI -->
+/* ================================================================= */
+/* SCRIPT PENDUKUNG MODUL TAMBAHAN AI CAMERA & PREDICTION            */
+/* ================================================================= */
+
+// 1. Animasi Canvas Kontrol vs Resistance
+(function initComparisonAnimations() {
+  const cCanvas = document.getElementById('animControlCanvas');
+  const rCanvas = document.getElementById('animResistanceCanvas');
+  if(!cCanvas || !rCanvas) return;
+  const cCtx = cCanvas.getContext('2d');
+  const rCtx = rCanvas.getContext('2d');
+  let step = 0;
+
+  function drawRatSprite(ctx, x, y, color) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 24, 13, 0, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(20, 0, 10, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function loopAnim() {
+    step += 0.05;
+    // Kontrol: pergerakan lambat/pasif
+    cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+    cCtx.fillStyle = '#050d1a'; cCtx.fillRect(0, 0, cCanvas.width, cCanvas.height);
+    let cx = 80 + Math.sin(step * 0.5) * 40;
+    drawRatSprite(cCtx, cx, 90, '#94a3b8');
+    cCtx.fillStyle = '#94a3b8'; cCtx.font = '11px Arial'; cCtx.fillText("Aktivitas Rendah (Sedenter)", 15, 25);
+
+    // Resistance: pergerakan aktif/kuat
+    rCtx.clearRect(0, 0, rCanvas.width, rCanvas.height);
+    rCtx.fillStyle = '#050d1a'; rCtx.fillRect(0, 0, rCanvas.width, rCanvas.height);
+    let rx = 100 + Math.sin(step * 1.5) * 110;
+    drawRatSprite(rCtx, rx, 90, '#f472b6');
+    rCtx.fillStyle = '#f472b6'; rCtx.font = '11px Arial'; rCtx.fillText("Aktivitas Tinggi (Resistance Training)", 15, 25);
+
+    requestAnimationFrame(loopAnim);
+  }
+  loopAnim();
+})();
+
+// 2. Grafik Perbandingan Kecepatan
+(function initSpeedCompChart() {
+  const chartEl = document.getElementById('speedComparisonChart');
+  if(!chartEl) return;
+  const labels = ['0s', '10s', '20s', '30s', '40s', '50s', '60s'];
+  window.speedCompChartInstance = new Chart(chartEl, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Kontrol (cm/s)', data: [2.8, 3.1, 2.9, 3.2, 3.0, 3.1, 2.9], borderColor: '#94a3b8', tension: 0.3 },
+        { label: 'Resistance (cm/s)', data: [4.5, 5.2, 5.8, 6.1, 6.0, 6.4, 6.2], borderColor: '#22d3ee', tension: 0.3 }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, scales: { x: { ticks: { color: '#bae6fd' } }, y: { ticks: { color: '#bae6fd' }, min: 0, max: 10 } } }
+  });
+})();
+
+// 3. Update Live Movement Speed Interaktif
+setInterval(() => {
+  const l1 = document.getElementById('ls-1');
+  const l5 = document.getElementById('ls-5');
+  if(l1 && l5) {
+    l1.textContent = (2.8 + Math.random() * 0.5).toFixed(2) + ' cm/s';
+    l5.textContent = (5.8 + Math.random() * 0.8).toFixed(2) + ' cm/s';
+  }
+}, 1200);
+
+// 4. Kalkulator Parameter Estimasi Beban
+function hitungEstimasiBeban() {
+  const bb = parseFloat(document.getElementById('inBbTikus').value);
+  const beban = parseFloat(document.getElementById('inBebanEksternal').value);
+  document.getElementById('valBbTikus').innerText = bb;
+  document.getElementById('valBebanEksternal').innerText = beban;
+
+  const rasio = (beban / bb) * 100;
+  let kategori = rasio > 60 ? 'Intensitas Tinggi (Hipertrofi Optimal)' : rasio > 30 ? 'Intensitas Sedang (Moderate Training)' : 'Intensitas Ringan / Basal';
+  document.getElementById('hasilEstimasiBeban').innerHTML = `Rasio Beban (Load Ratio): <b>${rasio.toFixed(1)}% dari BB</b> | Kategori: <b>${kategori}</b>`;
+}
     <script>
     const dataWistar = [
       { id: 'Wistar_01', group: 'Kontrol', mtor: 28.4, elisa: 'Rendah', strength: 'Normal', vo2: 'Cukup' },
@@ -1092,10 +1490,989 @@ function jalankanUnitTestCloudflare() {
         &bull; <b>Interpretasi:</b> ${d.ket}
       `;
     }
-  
- 
+  /* ==========================================
+   WISTAR AI PREDICTIVE ANIMATED GRAPH
+========================================== */
 
+(function initWistarAI() {
 
+    if (typeof Chart === "undefined") {
+        console.error("Chart.js belum tersedia");
+        return;
+    }
+
+    const motion = document.getElementById("wistarMotionGraph");
+    const prediction = document.getElementById("wistarPredictionGraph");
+    const behavior = document.getElementById("wistarBehaviorGraph");
+
+    if (!motion || !prediction || !behavior) return;
+
+    // Hentikan grafik lama jika script dimuat ulang
+    ["wistarMotionChart","wistarPredictionChart","wistarBehaviorChart"]
+      .forEach(key => {
+        if (window[key]) window[key].destroy();
+      });
+
+    if (window.wistarPredictiveTimer) {
+        clearInterval(window.wistarPredictiveTimer);
+    }
+
+    const labels = Array.from(
+        {length:25},
+        (_,i) => `${i*5}s`
+    );
+
+    const actual = labels.map(
+        () => 3 + Math.random()*5
+    );
+
+    const predicted = actual.map(
+        (v,i) => i < 18 ? null : v*0.9
+    );
+
+    const commonOptions = {
+        responsive:true,
+        maintainAspectRatio:false,
+        animation:false,
+
+        interaction:{
+            intersect:false,
+            mode:"index"
+        },
+
+        plugins:{
+            legend:{
+                labels:{
+                    color:"#e0f2fe"
+                }
+            }
+        },
+
+        scales:{
+            x:{
+                ticks:{color:"#bae6fd"},
+                grid:{color:"rgba(148,163,184,.12)"}
+            },
+
+            y:{
+                beginAtZero:true,
+                ticks:{color:"#bae6fd"},
+                grid:{color:"rgba(148,163,184,.12)"}
+            }
+        }
+    };
+
+    // 1. MOVEMENT SPEED
+    window.wistarMotionChart = new Chart(motion,{
+        type:"line",
+
+        data:{
+            labels:labels.slice(),
+
+            datasets:[
+                {
+                    label:"Actual Movement (Demo)",
+                    data:actual.slice(),
+                    borderColor:"#22d3ee",
+                    backgroundColor:"rgba(34,211,238,.12)",
+                    fill:true,
+                    tension:.4,
+                    pointRadius:0,
+                    borderWidth:2
+                },
+                {
+                    label:"AI Trend (Demo)",
+                    data:actual.map(v=>v*.85),
+                    borderColor:"#a78bfa",
+                    borderDash:[6,4],
+                    tension:.4,
+                    pointRadius:0,
+                    borderWidth:2
+                }
+            ]
+        },
+
+        options:commonOptions
+    });
+
+    // 2. ACTUAL VS PREDICTION
+    window.wistarPredictionChart = new Chart(prediction,{
+        type:"line",
+
+        data:{
+            labels:labels.slice(),
+
+            datasets:[
+                {
+                    label:"Actual",
+                    data:actual.slice(),
+                    borderColor:"#22d3ee",
+                    tension:.4,
+                    pointRadius:0
+                },
+                {
+                    label:"Predicted",
+                    data:predicted.slice(),
+                    borderColor:"#f472b6",
+                    borderDash:[6,4],
+                    tension:.4,
+                    pointRadius:2
+                }
+            ]
+        },
+
+        options:commonOptions
+    });
+
+    // 3. BEHAVIOR CLASSIFICATION
+    window.wistarBehaviorChart = new Chart(behavior,{
+        type:"doughnut",
+
+        data:{
+            labels:[
+                "Resting",
+                "Exploration",
+                "Locomotion"
+            ],
+
+            datasets:[{
+                data:[28,52,20],
+
+                backgroundColor:[
+                    "#64748b",
+                    "#06b6d4",
+                    "#a78bfa"
+                ],
+
+                borderWidth:3,
+                borderColor:"#102b46"
+            }]
+        },
+
+        options:{
+            responsive:true,
+            maintainAspectRatio:false,
+
+            plugins:{
+                legend:{
+                    position:"bottom",
+                    labels:{
+                        color:"#e0f2fe"
+                    }
+                }
+            }
+        }
+    });
+
+    // 4. ANIMASI GRAFIK OTOMATIS
+    let counter = 0;
+
+    window.wistarPredictiveTimer = setInterval(()=>{
+
+        counter++;
+
+        const movement = Math.max(
+            0.5,
+            5 + Math.sin(counter*.35)*2.5
+            + (Math.random()-.5)*1.5
+        );
+
+        const forecast = Math.max(
+            0.5,
+            movement*.8 + Math.sin(counter*.2)
+        );
+
+        const chart = window.wistarMotionChart;
+        const pred = window.wistarPredictionChart;
+
+        const newLabel = `${counter*5+120}s`;
+
+        chart.data.labels.push(newLabel);
+
+        chart.data.datasets[0].data.push(
+            Number(movement.toFixed(2))
+        );
+
+        chart.data.datasets[1].data.push(
+            Number(forecast.toFixed(2))
+        );
+
+        pred.data.labels.push(newLabel);
+
+        pred.data.datasets[0].data.push(
+            Number(movement.toFixed(2))
+        );
+
+        pred.data.datasets[1].data.push(
+            Number(forecast.toFixed(2))
+        );
+
+        // Batasi jumlah titik grafik
+        if(chart.data.labels.length>25){
+
+            chart.data.labels.shift();
+
+            chart.data.datasets.forEach(ds=>{
+                ds.data.shift();
+            });
+
+            pred.data.labels.shift();
+
+            pred.data.datasets.forEach(ds=>{
+                ds.data.shift();
+            });
+        }
+
+        chart.update("none");
+        pred.update("none");
+
+        // Update klasifikasi demo
+        const active = Math.round(
+            15 + Math.abs(Math.sin(counter*.12))*40
+        );
+
+        const exploration = Math.round(
+            25 + Math.abs(Math.cos(counter*.09))*35
+        );
+
+        const resting = Math.max(
+            5,100-active-exploration
+        );
+
+        window.wistarBehaviorChart.data.datasets[0].data=[
+            resting,
+            exploration,
+            active
+        ];
+
+        window.wistarBehaviorChart.update("none");
+
+    },900);
+
+})();
+ /* =====================================
+   ANIMATED WISTAR RAT TRACKING DEMO
+===================================== */
+
+(function(){
+
+  const canvas = document.getElementById(
+    "wistarRatAnimation"
+  );
+
+  if(!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+
+  let x = 450;
+  let y = 175;
+  let angle = 0;
+  let path = [];
+
+  function drawRat(x,y,angle){
+
+    ctx.save();
+
+    ctx.translate(x,y);
+    ctx.rotate(angle);
+
+    // Ekor
+    ctx.beginPath();
+    ctx.moveTo(-25,0);
+    ctx.quadraticCurveTo(-65,-35,-95,5);
+    ctx.strokeStyle="#f9a8a8";
+    ctx.lineWidth=4;
+    ctx.stroke();
+
+    // Badan
+    ctx.beginPath();
+    ctx.ellipse(0,0,35,22,0,0,Math.PI*2);
+    ctx.fillStyle="#d6c5b5";
+    ctx.fill();
+
+    // Kepala
+    ctx.beginPath();
+    ctx.arc(32,0,17,0,Math.PI*2);
+    ctx.fillStyle="#ead9c9";
+    ctx.fill();
+
+    // Telinga
+    ctx.fillStyle="#f9a8a8";
+
+    ctx.beginPath();
+    ctx.arc(24,-14,7,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(24,14,7,0,Math.PI*2);
+    ctx.fill();
+
+    // Mata
+    ctx.fillStyle="#111827";
+    ctx.beginPath();
+    ctx.arc(40,-5,2.5,0,Math.PI*2);
+    ctx.fill();
+
+    // Hidung
+    ctx.fillStyle="#fb7185";
+    ctx.beginPath();
+    ctx.arc(49,0,3,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function animate(){
+
+    ctx.clearRect(
+      0,0,canvas.width,canvas.height
+    );
+
+    // Arena
+    ctx.strokeStyle="#38bdf8";
+    ctx.lineWidth=3;
+
+    ctx.strokeRect(
+      25,25,850,300
+    );
+
+    // Grid arena
+    ctx.strokeStyle="rgba(148,163,184,.12)";
+    ctx.lineWidth=1;
+
+    for(let i=1;i<8;i++){
+      ctx.beginPath();
+      ctx.moveTo(25+i*106,25);
+      ctx.lineTo(25+i*106,325);
+      ctx.stroke();
+    }
+
+    // Gerakan tikus demo
+    angle += 0.025;
+
+    x += Math.sin(angle*1.7)*3;
+    y += Math.cos(angle*1.3)*2;
+
+    x=Math.max(110,Math.min(790,x));
+    y=Math.max(90,Math.min(260,y));
+
+    path.push({x,y});
+
+    if(path.length>180){
+      path.shift();
+    }
+
+    // Trajectory
+    ctx.beginPath();
+
+    path.forEach((p,i)=>{
+      if(i===0){
+        ctx.moveTo(p.x,p.y);
+      }else{
+        ctx.lineTo(p.x,p.y);
+      }
+    });
+
+    ctx.strokeStyle="#22d3ee";
+    ctx.lineWidth=3;
+    ctx.stroke();
+
+    // Rat
+    drawRat(x,y,Math.sin(angle)*0.25);
+
+    // Centroid marker
+    ctx.beginPath();
+    ctx.arc(x,y,7,0,Math.PI*2);
+    ctx.fillStyle="#facc15";
+    ctx.fill();
+
+    ctx.strokeStyle="#facc15";
+    ctx.lineWidth=2;
+    ctx.stroke();
+
+    // Tracking label
+    ctx.fillStyle="#67e8f9";
+    ctx.font="bold 15px Arial";
+
+    ctx.fillText(
+      "AI CENTROID TRACKING",
+      40,55
+    );
+
+    ctx.fillStyle="#ffffff";
+    ctx.font="13px Arial";
+
+    ctx.fillText(
+      "X: "+Math.round(x)+" px",
+      40,80
+    );
+
+    ctx.fillText(
+      "Y: "+Math.round(y)+" px",
+      40,100
+    );
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+
+})();
+/* ========================================================
+       SCRIPT TAMBAHAN: DEEPLABCUT, HEATMAP & TELEMETRI METRICS
+    ========================================================= */
+  /* ==========================================
+   WISTAR AI - LIVE SKELETON & HEATMAP
+========================================== */
+
+(function () {
+
+  const dlc = document.getElementById("dlcPoseCanvas");
+  const heat = document.getElementById("heatmapCanvas");
+
+  if (!dlc || !heat) return;
+
+  const ctx = dlc.getContext("2d");
+  const hctx = heat.getContext("2d");
+
+  let t = 0;
+  let hx = 200;
+  let hy = 115;
+  let trail = [];
+
+  // SKELETON ANIMATION
+  function drawSkeleton() {
+
+    const w = dlc.width;
+    const h = dlc.height;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Background
+    ctx.fillStyle = "#050d1a";
+    ctx.fillRect(0, 0, w, h);
+
+    // Grid
+    ctx.strokeStyle = "rgba(56,189,248,.12)";
+    ctx.lineWidth = 1;
+
+    for (let x = 0; x < w; x += 25) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
+      ctx.stroke();
+    }
+
+    t += 0.035;
+
+    const cx = 200 + Math.sin(t) * 85;
+    const cy = 115 + Math.cos(t * 0.7) * 35;
+
+    // Body keypoints
+    const p = {
+      nose: [cx + 65, cy],
+      head: [cx + 40, cy],
+      ear1: [cx + 30, cy - 20],
+      ear2: [cx + 30, cy + 20],
+      neck: [cx + 15, cy],
+      shoulder: [cx, cy],
+      spine: [cx - 20, cy],
+      hip: [cx - 45, cy],
+      leg1: [cx - 5, cy + 28],
+      leg2: [cx - 35, cy + 28],
+      tail: [cx - 85, cy + Math.sin(t * 2) * 15]
+    };
+
+    // Skeleton connections
+    const bones = [
+      ["nose","head"],
+      ["head","neck"],
+      ["ear1","head"],
+      ["ear2","head"],
+      ["neck","shoulder"],
+      ["shoulder","spine"],
+      ["spine","hip"],
+      ["hip","leg1"],
+      ["spine","leg2"],
+      ["hip","tail"]
+    ];
+
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "#22d3ee";
+
+    bones.forEach(([a,b]) => {
+      ctx.beginPath();
+      ctx.moveTo(...p[a]);
+      ctx.lineTo(...p[b]);
+      ctx.stroke();
+    });
+
+    // Keypoints
+    Object.entries(p).forEach(([name,point]) => {
+
+      ctx.beginPath();
+      ctx.arc(point[0],point[1],5,0,Math.PI*2);
+
+      ctx.fillStyle =
+        name === "nose" ? "#f472b6" :
+        name === "hip" ? "#a78bfa" :
+        "#22d3ee";
+
+      ctx.fill();
+
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+
+    // Centroid
+    ctx.beginPath();
+    ctx.arc(cx,cy,7,0,Math.PI*2);
+    ctx.fillStyle = "#facc15";
+    ctx.fill();
+
+    ctx.fillStyle = "#67e8f9";
+    ctx.font = "bold 12px Arial";
+    ctx.fillText("DEMO POSE TRACKING",12,18);
+
+    requestAnimationFrame(drawSkeleton);
+  }
+
+  // SPATIAL OCCUPANCY HEATMAP
+  function drawHeatmap() {
+
+    hctx.clearRect(0,0,heat.width,heat.height);
+
+    hctx.fillStyle = "#050d1a";
+    hctx.fillRect(0,0,heat.width,heat.height);
+
+    // Arena boundary
+    hctx.strokeStyle = "#16415f";
+    hctx.lineWidth = 2;
+    hctx.strokeRect(8,8,384,214);
+
+    // Moving trajectory
+    t += 0.025;
+
+    hx = 200 + Math.sin(t * 1.2) * 120;
+    hy = 115 + Math.cos(t * 0.9) * 65;
+
+    trail.push([hx,hy]);
+
+    if (trail.length > 180) {
+      trail.shift();
+    }
+
+    // Heatmap accumulation
+    trail.forEach((point,i) => {
+
+      const intensity = i / trail.length;
+
+      const gradient = hctx.createRadialGradient(
+        point[0],point[1],2,
+        point[0],point[1],35
+      );
+
+      gradient.addColorStop(
+        0,`rgba(255,0,0,${intensity * .35})`
+      );
+
+      gradient.addColorStop(
+        .5,`rgba(255,180,0,${intensity * .2})`
+      );
+
+      gradient.addColorStop(1,"rgba(0,0,255,0)");
+
+      hctx.fillStyle = gradient;
+      hctx.fillRect(
+        point[0]-35,
+        point[1]-35,
+        70,70
+      );
+    });
+
+    // Current centroid
+    hctx.beginPath();
+    hctx.arc(hx,hy,5,0,Math.PI*2);
+    hctx.fillStyle = "#22d3ee";
+    hctx.fill();
+
+    hctx.fillStyle = "#f472b6";
+    hctx.font = "bold 12px Arial";
+    hctx.fillText("SPATIAL OCCUPANCY DEMO",12,20);
+
+    requestAnimationFrame(drawHeatmap);
+  }
+
+  // START BOTH ANIMATIONS
+  drawSkeleton();
+  drawHeatmap();
+
+  // METRICS
+  let distance = 14.85;
+  let active = 222;
+
+  setInterval(() => {
+
+    distance += 0.02;
+    active++;
+
+    const speed = (3.5 + Math.random()*3.5).toFixed(2);
+
+    const speedEl = document.getElementById("metricSpeed");
+    const distEl = document.getElementById("metricDistance");
+    const activeEl = document.getElementById("metricActive");
+
+    if (speedEl) speedEl.textContent = speed + " cm/s";
+    if (distEl) distEl.textContent = distance.toFixed(2) + " m";
+
+    if (activeEl) {
+      activeEl.textContent =
+        String(Math.floor(active/60)).padStart(2,"0")
+        + ":" +
+        String(active%60).padStart(2,"0") + " m";
+    }
+
+  },1000);
+
+})();
+/* ==========================================
+   WISTAR LADDER CLIMBING AI ANIMATION
+========================================== */
+
+(function initWistarLadderAI() {
+
+  const control = document.getElementById("ladderControlCanvas");
+  const resistance = document.getElementById("ladderResistanceCanvas");
+
+  if (!control || !resistance) return;
+
+  const cctx = control.getContext("2d");
+  const rctx = resistance.getContext("2d");
+
+  let controlPosition = 0;
+  let resistancePosition = 0;
+  let tick = 0;
+  let speedHistory = [];
+
+  const $ = id => document.getElementById(id);
+
+  // GAMBAR TANGGA DAN TIKUS
+  function drawLadder(ctx, position, isResistance, load) {
+
+    const w = 500;
+    const h = 350;
+
+    ctx.clearRect(0,0,w,h);
+
+    ctx.fillStyle = "#050d1a";
+    ctx.fillRect(0,0,w,h);
+
+    // Tangga
+    ctx.strokeStyle = "#94a3b8";
+    ctx.lineWidth = 7;
+
+    ctx.beginPath();
+    ctx.moveTo(180,320);
+    ctx.lineTo(320,35);
+    ctx.moveTo(250,320);
+    ctx.lineTo(390,35);
+    ctx.stroke();
+
+    // Anak tangga
+    ctx.strokeStyle = "#38bdf8";
+    ctx.lineWidth = 4;
+
+    for(let i=0;i<11;i++) {
+      let y = 300-i*26;
+      let x = 190+i*12;
+
+      ctx.beginPath();
+      ctx.moveTo(x,y);
+      ctx.lineTo(x+70,y);
+      ctx.stroke();
+    }
+
+    // Posisi tikus
+    let ratY = 285-position*2.35;
+    let ratX = 245+position*.4;
+
+    // Bayangan beban / harness
+    if(isResistance && load > 0) {
+
+      ctx.strokeStyle = "#f472b6";
+      ctx.lineWidth = 3;
+
+      ctx.beginPath();
+      ctx.moveTo(ratX-12,ratY+8);
+      ctx.lineTo(ratX-35,ratY+30);
+      ctx.stroke();
+
+      ctx.fillStyle = "#f472b6";
+      ctx.fillRect(ratX-48,ratY+25,28,17);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "11px Arial";
+      ctx.fillText(load+" g",ratX-48,ratY+55);
+    }
+
+    // Badan tikus
+    ctx.save();
+    ctx.translate(ratX,ratY);
+
+    ctx.fillStyle = "#d6c5b5";
+    ctx.beginPath();
+    ctx.ellipse(0,0,30,17,-0.6,0,Math.PI*2);
+    ctx.fill();
+
+    // Kepala
+    ctx.beginPath();
+    ctx.arc(22,-16,13,0,Math.PI*2);
+    ctx.fillStyle = "#ead9c9";
+    ctx.fill();
+
+    // Telinga
+    ctx.fillStyle = "#f9a8a8";
+    ctx.beginPath();
+    ctx.arc(17,-28,6,0,Math.PI*2);
+    ctx.fill();
+
+    // Mata
+    ctx.fillStyle = "#111827";
+    ctx.beginPath();
+    ctx.arc(28,-19,2.5,0,Math.PI*2);
+    ctx.fill();
+
+    // Ekor
+    ctx.strokeStyle = "#f9a8a8";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(-25,4);
+    ctx.quadraticCurveTo(-55,20,-70,5);
+    ctx.stroke();
+
+    // Kaki animasi
+    const legMove = Math.sin(tick*.25)*8;
+
+    ctx.strokeStyle = "#d6c5b5";
+    ctx.lineWidth = 4;
+
+    ctx.beginPath();
+    ctx.moveTo(-12,10);
+    ctx.lineTo(-20+legMove,25);
+    ctx.moveTo(10,10);
+    ctx.lineTo(18-legMove,25);
+    ctx.stroke();
+
+    ctx.restore();
+
+    // Indikator progres
+    ctx.fillStyle = "#67e8f9";
+    ctx.font = "bold 14px Arial";
+    ctx.fillText(
+      isResistance ? "RESISTANCE TRAINING" : "CONTROL GROUP",
+      15,22
+    );
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "12px Arial";
+    ctx.fillText(
+      "Climb progress: "+Math.round(position/100*100)+"%",
+      15,43
+    );
+
+    ctx.fillStyle = "#22d3ee";
+    ctx.fillRect(15,55,position*4.5,5);
+  }
+
+  // HITUNG BEBAN DAN KECEPATAN DEMO
+  function updateLadder() {
+
+    const bodyWeight = Math.max(
+      1, Number($("ladderBodyWeight").value)||200
+    );
+
+    const externalLoad = Math.max(
+      0, Number($("ladderExternalLoad").value)||0
+    );
+
+    const height = Math.max(
+      10, Number($("ladderHeight").value)||100
+    );
+
+    const baseSpeed = Math.max(
+      .1, Number($("ladderBaseSpeed").value)||4
+    );
+
+    const loadRatio = externalLoad/bodyWeight*100;
+    const totalMass = bodyWeight+externalLoad;
+
+    // Kecepatan resistance di bawah ini hanya model demo,
+    // bukan prediksi fisiologis yang tervalidasi.
+    const controlSpeed = baseSpeed *
+      (0.9 + Math.sin(tick*.08)*.1);
+
+    const resistanceSpeed = baseSpeed *
+      Math.max(.35,1-(loadRatio/100)*.35) *
+      (0.9+Math.sin(tick*.08)*.1);
+
+    // Animasi pendakian
+    controlPosition += controlSpeed*.035;
+    resistancePosition += resistanceSpeed*.035;
+
+    if(controlPosition>=100) controlPosition=0;
+    if(resistancePosition>=100) resistancePosition=0;
+
+    drawLadder(cctx,controlPosition,false,0);
+    drawLadder(rctx,resistancePosition,true,externalLoad);
+
+    $("ladderControlSpeed").textContent =
+      controlSpeed.toFixed(2)+" cm/s";
+
+    $("ladderResistanceSpeed").textContent =
+      resistanceSpeed.toFixed(2)+" cm/s";
+
+    $("ladderControlProgress").textContent =
+      Math.round(controlPosition)+"%";
+
+    $("ladderResistanceProgress").textContent =
+      Math.round(resistancePosition)+"%";
+
+    $("ladderLoadDisplay").textContent =
+      externalLoad+" gram";
+
+    $("ladderLoadRatio").textContent =
+      loadRatio.toFixed(1)+"%";
+
+    $("ladderTotalMass").textContent =
+      totalMass.toFixed(1)+" g";
+
+    const force = totalMass/1000*9.81;
+
+    $("ladderWeightForce").textContent =
+      force.toFixed(3)+" N";
+
+    const estimatedTime = height/resistanceSpeed;
+
+    $("ladderTimeEstimate").textContent =
+      estimatedTime.toFixed(1)+" detik";
+
+    speedHistory.push({
+      time:tick,
+      control:controlSpeed,
+      resistance:resistanceSpeed
+    });
+
+    if(speedHistory.length>30) speedHistory.shift();
+
+    if(window.wistarLadderChart) {
+      window.wistarLadderChart.data.labels =
+        speedHistory.map(x=>x.time);
+
+      window.wistarLadderChart.data.datasets[0].data =
+        speedHistory.map(x=>x.control);
+
+      window.wistarLadderChart.data.datasets[1].data =
+        speedHistory.map(x=>x.resistance);
+
+      window.wistarLadderChart.update("none");
+    }
+
+    tick++;
+  }
+
+  // GRAFIK KECEPATAN
+  if(typeof Chart!=="undefined") {
+
+    if(window.wistarLadderChart) {
+      window.wistarLadderChart.destroy();
+    }
+
+    window.wistarLadderChart = new Chart(
+      $("ladderSpeedChart"),
+      {
+        type:"line",
+
+        data:{
+          labels:[],
+          datasets:[
+            {
+              label:"Control – Demo",
+              data:[],
+              borderColor:"#22d3ee",
+              tension:.35,
+              pointRadius:0
+            },
+            {
+              label:"Resistance – Demo",
+              data:[],
+              borderColor:"#f472b6",
+              tension:.35,
+              pointRadius:0
+            }
+          ]
+        },
+
+        options:{
+          responsive:true,
+          maintainAspectRatio:false,
+          animation:false,
+
+          plugins:{
+            legend:{
+              labels:{color:"#e0f2fe"}
+            }
+          },
+
+          scales:{
+            x:{
+              ticks:{color:"#bae6fd"},
+              title:{
+                display:true,
+                text:"Waktu simulasi",
+                color:"#bae6fd"
+              }
+            },
+            y:{
+              beginAtZero:true,
+              ticks:{color:"#bae6fd"},
+              title:{
+                display:true,
+                text:"Kecepatan (cm/s)",
+                color:"#bae6fd"
+              }
+            }
+          }
+        }
+      }
+    );
+  }
+
+  // UPDATE INPUT OTOMATIS
+  [
+    "ladderBodyWeight",
+    "ladderExternalLoad",
+    "ladderHeight",
+    "ladderBaseSpeed"
+  ].forEach(id=>{
+    $(id).addEventListener("input",()=>{
+      speedHistory=[];
+      controlPosition=0;
+      resistancePosition=0;
+    });
+  });
+
+  // MULAI ANIMASI
+  if(window.wistarLadderTimer) {
+    clearInterval(window.wistarLadderTimer);
+  }
+
+  window.wistarLadderTimer =
+    setInterval(updateLadder,100);
+
+  updateLadder();
+
+})();
   </script>
 </body>
 </html>
