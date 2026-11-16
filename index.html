@@ -1954,7 +1954,343 @@ function jalankanUnitTestCloudflare() {
   },1000);
 
 })();
+/* ==========================================
+   WISTAR LADDER CLIMBING AI ANIMATION
+========================================== */
 
+(function initWistarLadderAI() {
+
+  const control = document.getElementById("ladderControlCanvas");
+  const resistance = document.getElementById("ladderResistanceCanvas");
+
+  if (!control || !resistance) return;
+
+  const cctx = control.getContext("2d");
+  const rctx = resistance.getContext("2d");
+
+  let controlPosition = 0;
+  let resistancePosition = 0;
+  let tick = 0;
+  let speedHistory = [];
+
+  const $ = id => document.getElementById(id);
+
+  // GAMBAR TANGGA DAN TIKUS
+  function drawLadder(ctx, position, isResistance, load) {
+
+    const w = 500;
+    const h = 350;
+
+    ctx.clearRect(0,0,w,h);
+
+    ctx.fillStyle = "#050d1a";
+    ctx.fillRect(0,0,w,h);
+
+    // Tangga
+    ctx.strokeStyle = "#94a3b8";
+    ctx.lineWidth = 7;
+
+    ctx.beginPath();
+    ctx.moveTo(180,320);
+    ctx.lineTo(320,35);
+    ctx.moveTo(250,320);
+    ctx.lineTo(390,35);
+    ctx.stroke();
+
+    // Anak tangga
+    ctx.strokeStyle = "#38bdf8";
+    ctx.lineWidth = 4;
+
+    for(let i=0;i<11;i++) {
+      let y = 300-i*26;
+      let x = 190+i*12;
+
+      ctx.beginPath();
+      ctx.moveTo(x,y);
+      ctx.lineTo(x+70,y);
+      ctx.stroke();
+    }
+
+    // Posisi tikus
+    let ratY = 285-position*2.35;
+    let ratX = 245+position*.4;
+
+    // Bayangan beban / harness
+    if(isResistance && load > 0) {
+
+      ctx.strokeStyle = "#f472b6";
+      ctx.lineWidth = 3;
+
+      ctx.beginPath();
+      ctx.moveTo(ratX-12,ratY+8);
+      ctx.lineTo(ratX-35,ratY+30);
+      ctx.stroke();
+
+      ctx.fillStyle = "#f472b6";
+      ctx.fillRect(ratX-48,ratY+25,28,17);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "11px Arial";
+      ctx.fillText(load+" g",ratX-48,ratY+55);
+    }
+
+    // Badan tikus
+    ctx.save();
+    ctx.translate(ratX,ratY);
+
+    ctx.fillStyle = "#d6c5b5";
+    ctx.beginPath();
+    ctx.ellipse(0,0,30,17,-0.6,0,Math.PI*2);
+    ctx.fill();
+
+    // Kepala
+    ctx.beginPath();
+    ctx.arc(22,-16,13,0,Math.PI*2);
+    ctx.fillStyle = "#ead9c9";
+    ctx.fill();
+
+    // Telinga
+    ctx.fillStyle = "#f9a8a8";
+    ctx.beginPath();
+    ctx.arc(17,-28,6,0,Math.PI*2);
+    ctx.fill();
+
+    // Mata
+    ctx.fillStyle = "#111827";
+    ctx.beginPath();
+    ctx.arc(28,-19,2.5,0,Math.PI*2);
+    ctx.fill();
+
+    // Ekor
+    ctx.strokeStyle = "#f9a8a8";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(-25,4);
+    ctx.quadraticCurveTo(-55,20,-70,5);
+    ctx.stroke();
+
+    // Kaki animasi
+    const legMove = Math.sin(tick*.25)*8;
+
+    ctx.strokeStyle = "#d6c5b5";
+    ctx.lineWidth = 4;
+
+    ctx.beginPath();
+    ctx.moveTo(-12,10);
+    ctx.lineTo(-20+legMove,25);
+    ctx.moveTo(10,10);
+    ctx.lineTo(18-legMove,25);
+    ctx.stroke();
+
+    ctx.restore();
+
+    // Indikator progres
+    ctx.fillStyle = "#67e8f9";
+    ctx.font = "bold 14px Arial";
+    ctx.fillText(
+      isResistance ? "RESISTANCE TRAINING" : "CONTROL GROUP",
+      15,22
+    );
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "12px Arial";
+    ctx.fillText(
+      "Climb progress: "+Math.round(position/100*100)+"%",
+      15,43
+    );
+
+    ctx.fillStyle = "#22d3ee";
+    ctx.fillRect(15,55,position*4.5,5);
+  }
+
+  // HITUNG BEBAN DAN KECEPATAN DEMO
+  function updateLadder() {
+
+    const bodyWeight = Math.max(
+      1, Number($("ladderBodyWeight").value)||200
+    );
+
+    const externalLoad = Math.max(
+      0, Number($("ladderExternalLoad").value)||0
+    );
+
+    const height = Math.max(
+      10, Number($("ladderHeight").value)||100
+    );
+
+    const baseSpeed = Math.max(
+      .1, Number($("ladderBaseSpeed").value)||4
+    );
+
+    const loadRatio = externalLoad/bodyWeight*100;
+    const totalMass = bodyWeight+externalLoad;
+
+    // Kecepatan resistance di bawah ini hanya model demo,
+    // bukan prediksi fisiologis yang tervalidasi.
+    const controlSpeed = baseSpeed *
+      (0.9 + Math.sin(tick*.08)*.1);
+
+    const resistanceSpeed = baseSpeed *
+      Math.max(.35,1-(loadRatio/100)*.35) *
+      (0.9+Math.sin(tick*.08)*.1);
+
+    // Animasi pendakian
+    controlPosition += controlSpeed*.035;
+    resistancePosition += resistanceSpeed*.035;
+
+    if(controlPosition>=100) controlPosition=0;
+    if(resistancePosition>=100) resistancePosition=0;
+
+    drawLadder(cctx,controlPosition,false,0);
+    drawLadder(rctx,resistancePosition,true,externalLoad);
+
+    $("ladderControlSpeed").textContent =
+      controlSpeed.toFixed(2)+" cm/s";
+
+    $("ladderResistanceSpeed").textContent =
+      resistanceSpeed.toFixed(2)+" cm/s";
+
+    $("ladderControlProgress").textContent =
+      Math.round(controlPosition)+"%";
+
+    $("ladderResistanceProgress").textContent =
+      Math.round(resistancePosition)+"%";
+
+    $("ladderLoadDisplay").textContent =
+      externalLoad+" gram";
+
+    $("ladderLoadRatio").textContent =
+      loadRatio.toFixed(1)+"%";
+
+    $("ladderTotalMass").textContent =
+      totalMass.toFixed(1)+" g";
+
+    const force = totalMass/1000*9.81;
+
+    $("ladderWeightForce").textContent =
+      force.toFixed(3)+" N";
+
+    const estimatedTime = height/resistanceSpeed;
+
+    $("ladderTimeEstimate").textContent =
+      estimatedTime.toFixed(1)+" detik";
+
+    speedHistory.push({
+      time:tick,
+      control:controlSpeed,
+      resistance:resistanceSpeed
+    });
+
+    if(speedHistory.length>30) speedHistory.shift();
+
+    if(window.wistarLadderChart) {
+      window.wistarLadderChart.data.labels =
+        speedHistory.map(x=>x.time);
+
+      window.wistarLadderChart.data.datasets[0].data =
+        speedHistory.map(x=>x.control);
+
+      window.wistarLadderChart.data.datasets[1].data =
+        speedHistory.map(x=>x.resistance);
+
+      window.wistarLadderChart.update("none");
+    }
+
+    tick++;
+  }
+
+  // GRAFIK KECEPATAN
+  if(typeof Chart!=="undefined") {
+
+    if(window.wistarLadderChart) {
+      window.wistarLadderChart.destroy();
+    }
+
+    window.wistarLadderChart = new Chart(
+      $("ladderSpeedChart"),
+      {
+        type:"line",
+
+        data:{
+          labels:[],
+          datasets:[
+            {
+              label:"Control – Demo",
+              data:[],
+              borderColor:"#22d3ee",
+              tension:.35,
+              pointRadius:0
+            },
+            {
+              label:"Resistance – Demo",
+              data:[],
+              borderColor:"#f472b6",
+              tension:.35,
+              pointRadius:0
+            }
+          ]
+        },
+
+        options:{
+          responsive:true,
+          maintainAspectRatio:false,
+          animation:false,
+
+          plugins:{
+            legend:{
+              labels:{color:"#e0f2fe"}
+            }
+          },
+
+          scales:{
+            x:{
+              ticks:{color:"#bae6fd"},
+              title:{
+                display:true,
+                text:"Waktu simulasi",
+                color:"#bae6fd"
+              }
+            },
+            y:{
+              beginAtZero:true,
+              ticks:{color:"#bae6fd"},
+              title:{
+                display:true,
+                text:"Kecepatan (cm/s)",
+                color:"#bae6fd"
+              }
+            }
+          }
+        }
+      }
+    );
+  }
+
+  // UPDATE INPUT OTOMATIS
+  [
+    "ladderBodyWeight",
+    "ladderExternalLoad",
+    "ladderHeight",
+    "ladderBaseSpeed"
+  ].forEach(id=>{
+    $(id).addEventListener("input",()=>{
+      speedHistory=[];
+      controlPosition=0;
+      resistancePosition=0;
+    });
+  });
+
+  // MULAI ANIMASI
+  if(window.wistarLadderTimer) {
+    clearInterval(window.wistarLadderTimer);
+  }
+
+  window.wistarLadderTimer =
+    setInterval(updateLadder,100);
+
+  updateLadder();
+
+})();
   </script>
 </body>
 </html>
